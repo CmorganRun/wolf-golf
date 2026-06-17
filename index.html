@@ -39,6 +39,17 @@ input[type=number]{text-align:center}
 .divider::before{left:0}.divider::after{right:0}
 .error-msg{color:#e07070;font-size:13px;margin-top:8px;display:none}
 
+/* COURSE SEARCH */
+.course-card{background:#0f1a0f;border:1px solid #2d4a2d;border-radius:10px;padding:14px;cursor:pointer;transition:border-color .15s;margin-bottom:8px}
+.course-card:hover{border-color:#c9a84c}
+.course-card-name{font-size:14px;font-weight:600;color:#f5eed8}
+.course-card-meta{font-size:11px;color:#5a8a5a;margin-top:3px}
+.course-mini-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:2px;margin-top:10px;font-size:9px;text-align:center}
+.cmg-cell{color:#5a8a5a}
+.cmg-par{color:#c9a84c;font-weight:600}
+.spinner{display:inline-block;width:12px;height:12px;border:2px solid #2d4a2d;border-top-color:#c9a84c;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* GAME HEADER */
 .game-header{background:#111f11;border-bottom:1px solid #2d4a2d;padding:12px 20px;position:sticky;top:0;z-index:20}
 .game-header-inner{display:flex;justify-content:space-between;align-items:center}
@@ -164,6 +175,27 @@ table.scorecard .total-row{background:#1d3520;font-weight:700}
   </div>
 
   <div class="card">
+    <div class="card-title">Course (optional)</div>
+    <div id="course-search-block">
+      <div style="display:flex;gap:8px">
+        <input type="text" id="course-query" placeholder="Search course name + city" autocomplete="off" style="flex:1">
+        <button class="btn" id="course-search-btn" onclick="searchCourse()" style="width:auto;padding:10px 18px;margin-top:0">Search</button>
+      </div>
+      <div id="course-search-status" style="font-size:12px;color:#5a8a5a;margin-top:8px;display:none"></div>
+      <div id="course-result" style="display:none;margin-top:12px"></div>
+    </div>
+    <div id="course-selected-block" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#f5eed8" id="selected-course-name"></div>
+          <div style="font-size:11px;color:#5a8a5a;margin-top:2px" id="selected-course-meta"></div>
+        </div>
+        <button class="btn btn-ghost" style="width:auto;padding:6px 12px;font-size:12px;margin-top:0" onclick="clearCourse()">Change</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="card-title">New Game — Enter Players</div>
     <div class="player-row">
       <span class="player-num">1</span>
@@ -229,6 +261,7 @@ table.scorecard .total-row{background:#1d3520;font-weight:700}
         <div class="hdr-val" id="hdr-par">4</div>
       </div>
     </div>
+    <div id="hdr-course-name" style="text-align:center;font-size:11px;color:#5a8a5a;margin-top:4px;display:none"></div>
   </div>
 
   <!-- Hole tab -->
@@ -307,11 +340,14 @@ const FIREBASE_CONFIG = {
 // ────────────────────────────────────────────────────────────────
 
 // USGA stroke index (holes 1-18)
-const SI = [1,10,2,12,4,14,6,16,8,18,3,11,5,13,7,15,9,17];
-const PAR = [4,4,3,4,5,4,3,5,4,4,3,5,4,4,3,5,4,4];
+// Default par/stroke-index sequence used if no course is imported
+const DEFAULT_SI  = [1,10,2,12,4,14,6,16,8,18,3,11,5,13,7,15,9,17];
+const DEFAULT_PAR = [4,4,3,4,5,4,3,5,4,4,3,5,4,4,3,5,4,4];
 
 let db, gameRef, gs, gameCode;
 const pending = {}; // pending score inputs
+let selectedCourse = null; // { name, location, rating, slope, holes: [{hole,par,si,yardage}] }
+let courseSearchResults = [];
 
 // ── FIREBASE INIT ────────────────────────────────────────────────
 function initFB() {
@@ -324,8 +360,22 @@ function genCode() {
   return Math.random().toString(36).slice(2,8).toUpperCase();
 }
 
-function strokes(hcp, hole) {
-  const si = SI[hole - 1];
+function holePar(state, hole) {
+  if (state && state.course && state.course.holes && state.course.holes[hole - 1]) {
+    return state.course.holes[hole - 1].par;
+  }
+  return DEFAULT_PAR[hole - 1];
+}
+
+function holeSI(state, hole) {
+  if (state && state.course && state.course.holes && state.course.holes[hole - 1]) {
+    return state.course.holes[hole - 1].si;
+  }
+  return DEFAULT_SI[hole - 1];
+}
+
+function strokes(hcp, hole, state) {
+  const si = holeSI(state || gs, hole);
   let s = 0;
   if (hcp >= si) s++;
   if (hcp >= si + 18) s++;
@@ -360,9 +410,9 @@ function moneyClass(n) {
 }
 
 // ── BUILD INITIAL STATE ──────────────────────────────────────────
-function buildState(names, hcps, pv) {
+function buildState(names, hcps, pv, course) {
   const order = [0,1,2,3].sort(() => Math.random() - 0.5);
-  return {
+  const state = {
     players: names.map((name, i) => ({ name, hcp: parseInt(hcps[i]) || 0, money: 0, scores: {} })),
     pointValue: parseInt(pv) || 5,
     currentHole: 1,
@@ -371,6 +421,8 @@ function buildState(names, hcps, pv) {
     holeLog: [],
     gameComplete: false
   };
+  if (course) state.course = course;
+  return state;
 }
 
 // ── LOBBY ACTIONS ────────────────────────────────────────────────
@@ -384,7 +436,7 @@ async function startGame() {
 
   initFB();
   const code  = genCode();
-  const state = buildState(names, hcps, pv);
+  const state = buildState(names, hcps, pv, selectedCourse);
   await db.ref('games/' + code).set(state);
   subscribe(code);
 }
@@ -398,6 +450,113 @@ async function joinGame() {
   if (!snap.exists()) { err.style.display = 'block'; return; }
   err.style.display = 'none';
   subscribe(code);
+}
+
+// ── COURSE SEARCH (via Claude API + web search) ───────────────────
+async function searchCourse() {
+  const query  = document.getElementById('course-query').value.trim();
+  const status = document.getElementById('course-search-status');
+  const result = document.getElementById('course-result');
+  const btn    = document.getElementById('course-search-btn');
+  if (!query) return;
+
+  status.style.display = 'block';
+  status.innerHTML = `<span class="spinner"></span>Searching for "${query}"…`;
+  result.style.display = 'none';
+  result.innerHTML = '';
+  btn.disabled = true;
+
+  try {
+    const prompt = `Search the web for the golf course "${query}". Find its official or most reliable published scorecard with 18 holes. I need, for the course (use the men's/standard tees if multiple are listed):
+- name
+- location (city, state)
+- course rating and slope (if available, otherwise null)
+- for each of the 18 holes: hole number, par, stroke index / handicap index (the 1-18 difficulty ranking), and yardage (if available, otherwise null)
+
+If you cannot confidently find real data for this exact course, respond with {"found": false} only.
+
+Respond ONLY with raw JSON, no markdown fences, no commentary, in this exact shape:
+{"found": true, "name": "...", "location": "...", "rating": 71.2, "slope": 128, "holes": [{"hole":1,"par":4,"si":7,"yardage":412}, ... 18 entries ...]}`;
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 2000,
+        messages: [{ role: "user", content: prompt }],
+        tools: [{ type: "web_search_20250305", name: "web_search" }]
+      })
+    });
+    const data = await response.json();
+    const textBlocks = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
+    const clean = textBlocks.replace(/```json|```/g, '').trim();
+    const jsonMatch = clean.match(/\{[\s\S]*\}/);
+    const parsed = jsonMatch ? JSON.parse(jsonMatch[0]) : { found: false };
+
+    status.style.display = 'none';
+    btn.disabled = false;
+
+    if (!parsed.found || !parsed.holes || parsed.holes.length !== 18) {
+      status.style.display = 'block';
+      status.style.color = '#e07070';
+      status.textContent = `Couldn't find a reliable scorecard for "${query}". Try adding the city/state, or skip and use generic par/stroke values.`;
+      return;
+    }
+
+    courseSearchResults = [parsed];
+    renderCourseResult(parsed);
+  } catch (e) {
+    status.style.display = 'block';
+    status.style.color = '#e07070';
+    status.textContent = 'Search failed — check your connection and try again.';
+    btn.disabled = false;
+  }
+}
+
+function renderCourseResult(course) {
+  const result = document.getElementById('course-result');
+  const totalPar = course.holes.reduce((s,h) => s + h.par, 0);
+  const metaParts = [course.location, course.rating ? `Rating ${course.rating}` : null, course.slope ? `Slope ${course.slope}` : null].filter(Boolean).join(' · ');
+
+  const miniGrid = course.holes.slice(0,9).map(h => `<div class="cmg-cell"><div class="cmg-par">${h.par}</div></div>`).join('');
+
+  result.style.display = 'block';
+  result.innerHTML = `
+    <div class="course-card" onclick="confirmCourse()">
+      <div class="course-card-name">${course.name}</div>
+      <div class="course-card-meta">${metaParts || 'Par ' + totalPar}</div>
+      <div class="course-mini-grid">${miniGrid}</div>
+      <div style="font-size:11px;color:#5a8a5a;margin-top:8px">Front 9 par shown above · Tap to use this course</div>
+    </div>`;
+}
+
+function confirmCourse() {
+  const course = courseSearchResults[0];
+  selectedCourse = {
+    name: course.name,
+    location: course.location || '',
+    rating: course.rating || null,
+    slope: course.slope || null,
+    holes: course.holes.map(h => ({ hole: h.hole, par: h.par, si: h.si, yardage: h.yardage || null }))
+  };
+
+  const totalPar = selectedCourse.holes.reduce((s,h) => s + h.par, 0);
+  document.getElementById('course-search-block').style.display = 'none';
+  document.getElementById('course-selected-block').style.display = 'block';
+  document.getElementById('selected-course-name').textContent = selectedCourse.name;
+  const metaParts = [selectedCourse.location, `Par ${totalPar}`, selectedCourse.rating ? `Rating ${selectedCourse.rating}/${selectedCourse.slope}` : null].filter(Boolean).join(' · ');
+  document.getElementById('selected-course-meta').textContent = metaParts;
+}
+
+function clearCourse() {
+  selectedCourse = null;
+  courseSearchResults = [];
+  document.getElementById('course-search-block').style.display = 'block';
+  document.getElementById('course-selected-block').style.display = 'none';
+  document.getElementById('course-query').value = '';
+  document.getElementById('course-result').style.display = 'none';
+  document.getElementById('course-search-status').style.display = 'none';
 }
 
 function subscribe(code) {
@@ -414,6 +573,7 @@ function subscribe(code) {
       });
     }
     if (gs.holeLog && !Array.isArray(gs.holeLog)) gs.holeLog = Object.values(gs.holeLog);
+    if (gs.course && gs.course.holes && !Array.isArray(gs.course.holes)) gs.course.holes = Object.values(gs.course.holes);
     render();
   });
   document.getElementById('screen-lobby').classList.remove('active');
@@ -432,12 +592,19 @@ function render() {
   const order = teeOrder(gs, hole);
   const wi    = wolfIdxForHole(gs, hole);
   const wolf  = gs.players[wi];
-  const par   = PAR[hole - 1];
-
+  const par   = holePar(gs, hole);
   document.getElementById('hdr-code').textContent = gameCode;
   document.getElementById('hdr-hole').textContent = hole;
   document.getElementById('hdr-par').textContent  = par;
   document.getElementById('score-hole-label').textContent = hole;
+
+  const courseEl = document.getElementById('hdr-course-name');
+  if (gs.course && gs.course.name) {
+    courseEl.style.display = 'block';
+    courseEl.textContent = `⛳ ${gs.course.name}`;
+  } else {
+    courseEl.style.display = 'none';
+  }
 
   renderBanner(gs, hole, hs, wi, wolf);
   renderPlayersGrid(gs, hole, hs, order, wi);
@@ -480,7 +647,7 @@ function renderBanner(gs, hole, hs, wi, wolf) {
 function renderPlayersGrid(gs, hole, hs, order, wi) {
   const grid = document.getElementById('players-grid');
   grid.innerHTML = '';
-  const par = PAR[hole - 1];
+  const par = holePar(gs, hole);
 
   gs.players.forEach((p, i) => {
     const teePos  = order.indexOf(i) + 1;
@@ -590,8 +757,7 @@ function renderScoreEntry(gs, hole, par) {
 
 function adj(i, d) {
   const hole = gs.currentHole;
-  const par  = PAR[hole - 1];
-  if (pending[i] === undefined) pending[i] = (gs.players[i].scores && gs.players[i].scores[hole]) ? gs.players[i].scores[hole] : par;
+  const par  = holePar(gs, hole);
   pending[i] = Math.max(1, pending[i] + d);
   document.getElementById('sv' + i).textContent = pending[i];
 }
@@ -618,8 +784,7 @@ async function submitScores() {
   const hs    = holeState(gs, hole);
   const order = teeOrder(gs, hole);
   const wi    = wolfIdxForHole(gs, hole);
-  const par   = PAR[hole - 1];
-  const pv    = gs.pointValue || 5;
+  const par   = holePar(gs, hole);
 
   if (!hs || (hs.partner === undefined && !hs.solo)) {
     alert('Wolf must make a decision first.');
@@ -717,7 +882,8 @@ function renderScorecard() {
   const inTot  = gs.players.map(() => 0);
 
   for (let h = 1; h <= 18; h++) {
-    const par = PAR[h - 1];
+    const par = holePar(gs, h);
+    const si  = holeSI(gs, h);
     if (h <= 9) outPar += par; else inPar += par;
     const order = teeOrder(gs, h);
     const wi    = order[order.length - 1];
@@ -747,7 +913,7 @@ function renderScorecard() {
       if (h <= 9) outTot[i] += g || 0; else inTot[i] += g || 0;
       html += `<td><span class="${cls}">${g || ''}</span></td>`;
     });
-    html += `<td style="font-size:10px;color:#5a8a5a">${rowExtra}</td></tr>`;
+    html += `<td style="font-size:10px;color:#5a8a5a">${rowExtra || si}</td></tr>`;
 
     if (h === 9) {
       html += `<tr class="subtotal"><td>OUT</td><td>${outPar}</td>${gs.players.map((_,i) => `<td>${outTot[i] || ''}</td>`).join('')}<td></td></tr>`;
