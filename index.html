@@ -597,7 +597,6 @@ function render() {
   if (!gs) return;
   const hole  = gs.currentHole;
   const hs    = getHoleState(gs, hole);
-  console.log('render: hole='+hole+' holeStates='+JSON.stringify(gs.holeStates)+' hs='+JSON.stringify(hs));
   const order = getTeeOrder(gs, hole);
   const wi    = getWolfIdx(gs, hole);
   const wolf  = gs.players[wi];
@@ -763,7 +762,7 @@ function adj(i, d) {
 
 // ── WOLF DECISIONS ────────────────────────────────────────────────
 async function pickPartner(pid) {
-  const h = gs.currentHole;
+  const h = String(gs.currentHole);
   await patchGame({
     ['holeStates/' + h + '/partner']: pid,
     ['holeStates/' + h + '/solo']: false,
@@ -771,7 +770,7 @@ async function pickPartner(pid) {
   });
 }
 async function goSolo() {
-  const h = gs.currentHole;
+  const h = String(gs.currentHole);
   await patchGame({
     ['holeStates/' + h + '/solo']: true,
     ['holeStates/' + h + '/blind']: false,
@@ -779,7 +778,7 @@ async function goSolo() {
   });
 }
 async function goBlindWolf() {
-  const h = gs.currentHole;
+  const h = String(gs.currentHole);
   await patchGame({
     ['holeStates/' + h + '/blind']: true,
     ['holeStates/' + h + '/solo']: true,
@@ -853,8 +852,8 @@ async function submitScores() {
     const next      = hole + 1;
     const prevWolf  = order[order.length - 1];
     const nextOrder = [prevWolf, ...order.slice(0, order.length - 1)];
-    p['currentHole']       = next;
-    p['teeOrder/' + next]  = nextOrder;
+    p['currentHole']              = next;
+    p['teeOrder/' + String(next)] = nextOrder;
   } else {
     p['gameComplete'] = true;
   }
@@ -919,7 +918,7 @@ function renderScorecard() {
       }
       if (h <= 9) outTot[i] += g || 0; else inTot[i] += g || 0;
       const sdots = s > 0 ? dot5.repeat(s) : '';
-      html += `<td><span class="${cls}">${g !== null ? g : ''}</span>${g !== null ? sdots : ''}</td>`;
+      html += `<td><span class="${cls}">${g !== null ? g : ''}</span>${sdots}</td>`;
     });
 
     html += `</tr>`;
