@@ -541,10 +541,12 @@ function renderGrid(gs,hole,hs,order,wi,par) {
       else if (diff>=2) scoreColor='color:#c0392b';
     }
     const money=Math.round(p.money||0), s=strokes(p.hcp,hole);
+    const dots=s>0?'<span style="margin-left:5px">'+Array(s).fill('<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9a84c;vertical-align:middle"></span>').join('')+'</span>':'';
+    const strokeLabel=s>0?'<span style="color:#c9a84c;font-weight:600">−'+s+' stroke'+(s>1?'s':'')+'</span> · ':'';
     grid.innerHTML+=`<div class="${cls}">
-      <div class="pc-top"><div class="pc-name">${p.name}</div>${badge}</div>
+      <div class="pc-top"><div class="pc-name">${p.name}${dots}</div>${badge}</div>
       <div class="pc-score ${gross?'has-score':'no-score'}" style="${scoreColor}">${gross||'—'}</div>
-      <div class="pc-meta">${s>0?'−'+s+' stroke'+(s>1?'s':'')+' · ':''}HCP ${p.hcp}</div>
+      <div class="pc-meta">${strokeLabel}HCP ${p.hcp}</div>
       <div class="pc-money ${moneyClass(money)}">${fmt$(money)}</div>
     </div>`;
   });
@@ -687,7 +689,8 @@ function renderScorecard() {
       let cls='';
       if(d!==null){if(d<=-2)cls='score-eagle';else if(d===-1)cls='score-birdie';else if(d===1)cls='score-bogey';else if(d>=2)cls='score-dbl';}
       if(h<=9)outTot[i]+=g||0;else inTot[i]+=g||0;
-      html+=`<td><span class="${cls}">${g||''}</span></td>`;
+      const sdot=s>0?'<span style="display:inline-flex;gap:1px;vertical-align:middle;margin-left:2px">'+Array(s).fill('<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#c9a84c"></span>').join('')+'</span>':'';
+      html+=`<td><span class="${cls}">${g||''}</span>${g?sdot:''}</td>`;
     });
     html+=`</tr>`;
     if (h===9) html+=`<tr class="subtotal"><td>OUT</td><td>${outPar}</td><td></td>${gs.players.map((_,i)=>'<td>'+(outTot[i]||'')+'</td>').join('')}</tr>`;
