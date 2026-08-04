@@ -16,7 +16,7 @@ Use your training knowledge. "si" = stroke index 1-18 (1=hardest). If you truly 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': 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,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
