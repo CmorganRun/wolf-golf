@@ -360,7 +360,13 @@ function getTeeOrder(state, hole) {
 }
 function getHoleState(state, hole) {
   if (!state.holeStates) return null;
-  return state.holeStates[hole] || state.holeStates[String(hole)] || null;
+  // Handle both object {"1": {...}} and array [null, {...}] forms
+  const hs = state.holeStates[hole] !== undefined ? state.holeStates[hole]
+           : state.holeStates[String(hole)] !== undefined ? state.holeStates[String(hole)]
+           : null;
+  // If hs is null (Firebase null placeholder in array), return null
+  if (hs === null || hs === undefined) return null;
+  return hs;
 }
 function getWolfIdx(state, hole) {
   const o = getTeeOrder(state, hole);
@@ -591,6 +597,7 @@ function render() {
   if (!gs) return;
   const hole  = gs.currentHole;
   const hs    = getHoleState(gs, hole);
+  console.log('render: hole='+hole+' holeStates='+JSON.stringify(gs.holeStates)+' hs='+JSON.stringify(hs));
   const order = getTeeOrder(gs, hole);
   const wi    = getWolfIdx(gs, hole);
   const wolf  = gs.players[wi];
