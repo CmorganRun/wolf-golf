@@ -359,7 +359,8 @@ async function saveCourseToCache(course) {
 
 async function getCachedCourse(query) {
   try {
-    initFB();
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
     const snap = await db.ref('courses').once('value');
     if (!snap.exists()) return null;
     const courses = snap.val();
@@ -379,7 +380,8 @@ async function getCachedCourse(query) {
 
 async function loadRecentCourses() {
   try {
-    initFB();
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.database();
     const snap = await db.ref('courses').once('value');
     if (!snap.exists()) return;
     const courses = Object.values(snap.val())
@@ -615,7 +617,8 @@ function renderGrid(gs,hole,hs,order,wi,par) {
       else if (diff>=2) scoreColor='color:#c0392b';
     }
     const money=Math.round(p.money||0), s=strokes(p.hcp,hole);
-    const dots=s>0?'<span style="margin-left:5px">'+Array(s).fill('<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9a84c;vertical-align:middle"></span>').join('')+'</span>':'';
+    const dot='<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9a84c;vertical-align:middle;margin-left:2px"></span>';
+    const dots=s>0?dot.repeat(s):'';
     const strokeLabel=s>0?'<span style="color:#c9a84c;font-weight:600">−'+s+' stroke'+(s>1?'s':'')+'</span> · ':'';
     grid.innerHTML+=`<div class="${cls}">
       <div class="pc-top"><div class="pc-name">${p.name}${dots}</div>${badge}</div>
@@ -763,7 +766,7 @@ function renderScorecard() {
       let cls='';
       if(d!==null){if(d<=-2)cls='score-eagle';else if(d===-1)cls='score-birdie';else if(d===1)cls='score-bogey';else if(d>=2)cls='score-dbl';}
       if(h<=9)outTot[i]+=g||0;else inTot[i]+=g||0;
-      const sdot=s>0?'<span style="display:inline-flex;gap:1px;vertical-align:middle;margin-left:2px">'+Array(s).fill('<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#c9a84c"></span>').join('')+'</span>':'';
+      const sdot=s>0?'<span style="display:inline-flex;gap:1px;vertical-align:middle;margin-left:2px">'+'<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#c9a84c"></span>'.repeat(s)+'</span>':'';
       html+=`<td><span class="${cls}">${g||''}</span>${g?sdot:''}</td>`;
     });
     html+=`</tr>`;
