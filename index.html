@@ -362,20 +362,23 @@ async function getCachedCourse(query) {
     if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
     const snap = await db.ref('courses').once('value');
-    if (!snap.exists()) return null;
+    if (!snap.exists()) { console.log('Cache: no courses stored'); return null; }
     const courses = snap.val();
     const q = query.toLowerCase();
-    // Find any cached course whose name contains the query words
     const words = q.split(' ').filter(w=>w.length>2);
+    console.log('Cache: checking', Object.keys(courses).length, 'courses for words:', words);
     for (const key of Object.keys(courses)) {
       const c = courses[key];
+      // Fix Firebase array serialization
+      if (c.holes && !Array.isArray(c.holes)) c.holes = Object.values(c.holes);
       const nameLower = (c.name||'').toLowerCase();
       const locationLower = (c.location||'').toLowerCase();
       const combined = nameLower + ' ' + locationLower;
+      console.log('Cache: checking "'+c.name+'" vs words', words, '→', words.every(w=>combined.includes(w)));
       if (words.every(w => combined.includes(w))) return c;
     }
     return null;
-  } catch(e) { return null; }
+  } catch(e) { console.log('Cache lookup error:', e.message); return null; }
 }
 
 async function loadRecentCourses() {
@@ -385,6 +388,7 @@ async function loadRecentCourses() {
     const snap = await db.ref('courses').once('value');
     if (!snap.exists()) return;
     const courses = Object.values(snap.val())
+      .map(c => { if (c.holes && !Array.isArray(c.holes)) c.holes = Object.values(c.holes); return c; })
       .sort((a,b) => (b.cachedAt||0) - (a.cachedAt||0))
       .slice(0, 5);
     if (!courses.length) return;
