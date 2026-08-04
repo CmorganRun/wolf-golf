@@ -13,6 +13,7 @@ body{font-family:'Inter',sans-serif;background:#0f1a0f;color:#f5eed8;min-height:
 .app{max-width:480px;margin:0 auto;padding-bottom:80px}
 .screen{display:none;padding:20px}
 .screen.active{display:block}
+/* LOBBY */
 .logo{text-align:center;padding:40px 0 28px}
 .logo-title{font-family:'Bebas Neue',sans-serif;font-size:64px;color:#c9a84c;letter-spacing:3px;line-height:1}
 .logo-sub{font-size:11px;color:#7a9a7a;letter-spacing:4px;text-transform:uppercase;margin-top:6px}
@@ -35,7 +36,8 @@ input[type=number]{text-align:center}
 .divider::before,.divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#2d4a2d}
 .divider::before{left:0}.divider::after{right:0}
 .error-msg{color:#e07070;font-size:13px;margin-top:8px;display:none}
-.course-card{background:#0f1a0f;border:1px solid #2d4a2d;border-radius:10px;padding:14px;cursor:pointer;transition:border-color .15s}
+/* COURSE */
+.course-card{background:#0f1a0f;border:1px solid #2d4a2d;border-radius:10px;padding:14px;cursor:pointer;transition:border-color .15s;margin-bottom:8px}
 .course-card:hover{border-color:#c9a84c}
 .course-card-name{font-size:14px;font-weight:600;color:#f5eed8}
 .course-card-meta{font-size:11px;color:#5a8a5a;margin-top:3px}
@@ -45,6 +47,7 @@ input[type=number]{text-align:center}
 .cmg-si{color:#3d5a3d;font-size:9px}
 .spinner{display:inline-block;width:12px;height:12px;border:2px solid #2d4a2d;border-top-color:#c9a84c;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* GAME HEADER */
 .game-header{background:#111f11;border-bottom:1px solid #2d4a2d;padding:12px 20px;position:sticky;top:0;z-index:20}
 .game-header-inner{display:flex;justify-content:space-between;align-items:center}
 .hdr-section{min-width:72px}
@@ -54,7 +57,8 @@ input[type=number]{text-align:center}
 .hdr-hole-label{font-size:10px;color:#7a9a7a;letter-spacing:2px;text-transform:uppercase;margin-top:-4px;text-align:center}
 .hdr-right{text-align:right}
 .hdr-course{text-align:center;font-size:11px;color:#5a8a5a;margin-top:4px;display:none}
-.wolf-banner{margin:16px 20px 12px;border-radius:12px;padding:16px;text-align:center;border:1px solid transparent;transition:background .3s,border-color .3s}
+/* WOLF BANNER */
+.wolf-banner{margin:16px 20px 12px;border-radius:12px;padding:16px;text-align:center;border:1px solid transparent;transition:all .3s}
 .wolf-banner.state-pending{background:#1e2e1e;border-color:#2d4a2d}
 .wolf-banner.state-team{background:#122333;border-color:#1e4a6e}
 .wolf-banner.state-solo{background:#2a1010;border-color:#5a1a1a}
@@ -63,6 +67,7 @@ input[type=number]{text-align:center}
 .banner-name{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#c9a84c;letter-spacing:1px}
 .banner-status{font-size:12px;color:rgba(245,238,216,.65);margin-top:3px}
 .banner-teams{font-size:13px;color:#f5eed8;margin-top:6px;font-weight:500}
+/* PLAYERS GRID */
 .players-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px 16px}
 .player-card{background:#1a2e1a;border:1px solid #2d4a2d;border-radius:10px;padding:12px;transition:all .2s}
 .player-card.is-wolf{border-color:#c9a84c;background:#1d2e12}
@@ -83,6 +88,7 @@ input[type=number]{text-align:center}
 .money-pos{color:#5cb85c}
 .money-neg{color:#e07070}
 .money-zero{color:#5a8a5a}
+/* WOLF DECISION */
 .wolf-decision{padding:0 20px 16px}
 .section-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#7a9a7a;margin-bottom:10px}
 .wd-btn{width:100%;background:#1a2e1a;border:1px solid #2d4a2d;border-radius:10px;padding:12px 14px;cursor:pointer;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:#f5eed8;text-align:left;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:border-color .15s,background .15s}
@@ -97,6 +103,7 @@ input[type=number]{text-align:center}
 .partner-btn:hover{border-color:#4a7fa5;background:#10202e}
 .partner-btn-sub{font-size:11px;color:#5a8a5a}
 .decision-locked{text-align:center;font-size:13px;color:#5a8a5a;padding:10px 0}
+/* SCORE ENTRY */
 .score-section{padding:0 20px 16px}
 .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .score-card{background:#1a2e1a;border:1px solid #2d4a2d;border-radius:10px;padding:12px}
@@ -108,6 +115,7 @@ input[type=number]{text-align:center}
 .sc-val{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#f5eed8;min-width:32px;text-align:center}
 .sc-par{font-size:10px;color:#5a8a5a;margin-top:2px}
 .stroke-dot{color:#c9a84c}
+/* SCORECARD */
 .scorecard-wrap{padding:0 20px}
 .sc-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table.scorecard{width:100%;border-collapse:collapse;font-size:12px;min-width:320px}
@@ -120,6 +128,7 @@ table.scorecard .total-row{background:#1d3520;font-weight:700}
 .score-birdie{color:#5cb85c}
 .score-bogey{color:#e07070}
 .score-dbl{color:#c0392b;font-weight:700}
+/* LEADERBOARD */
 .lb-wrap{padding:0 20px}
 .lb-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:#1a2e1a;border-radius:10px;margin-bottom:8px}
 .lb-rank{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#3d5a3d;width:28px;flex-shrink:0}
@@ -133,6 +142,7 @@ table.scorecard .total-row{background:#1d3520;font-weight:700}
 .log-section{margin-top:16px}
 .log-entry{font-size:12px;color:#7a9a7a;padding:6px 0;border-bottom:1px solid #1a2e1a}
 .log-entry:last-child{border-bottom:none}
+/* NAV */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#0a140a;border-top:1px solid #2d4a2d;display:flex;z-index:30;padding-bottom:env(safe-area-inset-bottom)}
 .nav-btn{flex:1;background:none;border:none;color:#3d5a3d;padding:10px 0 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:4px;transition:color .15s}
 .nav-btn.active{color:#c9a84c}
@@ -214,7 +224,8 @@ table.scorecard .total-row{background:#1d3520;font-weight:700}
   <div class="card">
     <div class="card-title">Join a Game</div>
     <input type="text" id="join-code" placeholder="Enter 6-letter code" maxlength="6"
-      style="text-transform:uppercase;letter-spacing:4px;font-size:20px;text-align:center">
+      style="text-transform:uppercase;letter-spacing:4px;font-size:20px;text-align:center"
+      onkeydown="if(event.key==='Enter')joinGame()">
     <div class="error-msg" id="err-join">Game not found. Check the code and try again.</div>
     <button class="btn" onclick="joinGame()" style="margin-top:12px">Join Game</button>
   </div>
@@ -287,6 +298,7 @@ table.scorecard .total-row{background:#1d3520;font-weight:700}
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
+// ── CONFIG ────────────────────────────────────────────────────────
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDeNvkzgqm42RojufXDqEzZynjKgP4XV9k",
   authDomain: "poker-timer-d80fc.firebaseapp.com",
@@ -294,118 +306,128 @@ const FIREBASE_CONFIG = {
   projectId: "poker-timer-d80fc",
   storageBucket: "poker-timer-d80fc.firebasestorage.app",
   messagingSenderId: "560538345745",
-  appId: "1:560538345745:web:ec2ac4649b4e04482bacb0",
-  measurementId: "G-LCYX82R37E"
+  appId: "1:560538345745:web:ec2ac4649b4e04482bacb0"
 };
-
 const DEFAULT_SI  = [1,10,2,12,4,14,6,16,8,18,3,11,5,13,7,15,9,17];
 const DEFAULT_PAR = [4,4,3,4,5,4,3,5,4,4,3,5,4,4,3,5,4,4];
 
+// ── STATE ─────────────────────────────────────────────────────────
 let db, gameRef, gs, gameCode;
-const pending = {};
+const pending = {};       // pending score inputs keyed by player index
 let selectedCourse = null;
 
+// ── FIREBASE INIT ─────────────────────────────────────────────────
 function initFB() {
   if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
   db = firebase.database();
 }
+window.addEventListener('DOMContentLoaded', () => { initFB(); loadRecentCourses(); });
 
-// Load recent courses as soon as page opens
-window.addEventListener('DOMContentLoaded', () => loadRecentCourses());
-
+// ── PURE HELPERS ──────────────────────────────────────────────────
 function holePar(state, hole) {
-  return (state&&state.course&&state.course.holes&&state.course.holes[hole-1])
-    ? state.course.holes[hole-1].par : DEFAULT_PAR[hole-1];
+  if (state && state.course && state.course.holes) {
+    const h = state.course.holes[hole - 1];
+    if (h) return h.par;
+  }
+  return DEFAULT_PAR[hole - 1];
 }
 function holeSI(state, hole) {
-  return (state&&state.course&&state.course.holes&&state.course.holes[hole-1])
-    ? state.course.holes[hole-1].si : DEFAULT_SI[hole-1];
+  if (state && state.course && state.course.holes) {
+    const h = state.course.holes[hole - 1];
+    if (h) return h.si;
+  }
+  return DEFAULT_SI[hole - 1];
 }
-function strokes(hcp, hole) {
+function getStrokes(hcp, hole) {
+  // Always use gs for course context
   const si = holeSI(gs, hole);
   let s = 0;
   if (hcp >= si) s++;
-  if (hcp >= si+18) s++;
+  if (hcp >= si + 18) s++;
   return s;
 }
+function getScore(player, hole) {
+  // Firebase stores numeric keys as strings — check both
+  if (!player.scores) return null;
+  const v = player.scores[hole] !== undefined ? player.scores[hole] : player.scores[String(hole)];
+  return v !== undefined ? v : null;
+}
+function getTeeOrder(state, hole) {
+  if (!state.teeOrder) return [0,1,2,3];
+  const o = state.teeOrder[hole] || state.teeOrder[String(hole)];
+  if (!o) return [0,1,2,3];
+  return Array.isArray(o) ? o : Object.values(o);
+}
+function getHoleState(state, hole) {
+  if (!state.holeStates) return null;
+  return state.holeStates[hole] || state.holeStates[String(hole)] || null;
+}
+function getWolfIdx(state, hole) {
+  const o = getTeeOrder(state, hole);
+  return o[o.length - 1];
+}
 function fmt$(n) {
-  const v = Math.round(n||0);
-  return v>0 ? '+$'+v : v<0 ? '-$'+Math.abs(v) : '$0';
+  const v = Math.round(n || 0);
+  return v > 0 ? '+$' + v : v < 0 ? '-$' + Math.abs(v) : '$0';
 }
-function moneyClass(n) { return n>0?'money-pos':n<0?'money-neg':'money-zero'; }
-function genCode() { return Math.random().toString(36).slice(2,8).toUpperCase(); }
-function teeOrder(state, hole) {
-  return (state.teeOrder&&state.teeOrder[hole]) ? state.teeOrder[hole] : [0,1,2,3];
-}
-function holeState(state, hole) {
-  return (state.holeStates&&state.holeStates[hole]) ? state.holeStates[hole] : null;
-}
-function wolfIdx(state, hole) {
-  const o = teeOrder(state, hole); return o[o.length-1];
-}
+function moneyClass(n) { return n > 0 ? 'money-pos' : n < 0 ? 'money-neg' : 'money-zero'; }
+function genCode() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
+function fixArr(v) { return Array.isArray(v) ? v : (v ? Object.values(v) : []); }
 
-// ── COURSE CACHE (Firebase) ───────────────────────────────────────
+// ── COURSE CACHE ──────────────────────────────────────────────────
 function cacheKey(name) {
-  return name.toLowerCase().replace(/[^a-z0-9]/g,'_').slice(0,60);
+  return name.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 60);
 }
-
 async function saveCourseToCache(course) {
   try {
-    initFB();
-    const key = cacheKey(course.name);
-    await db.ref('courses/'+key).set({ ...course, cachedAt: Date.now() });
-  } catch(e) { console.log('Cache save failed:', e.message); }
+    await db.ref('courses/' + cacheKey(course.name)).set({ ...course, cachedAt: Date.now() });
+  } catch(e) { console.warn('Cache save failed:', e.message); }
 }
-
 async function getCachedCourse(query) {
   try {
-    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.database();
     const snap = await db.ref('courses').once('value');
-    if (!snap.exists()) { console.log('Cache: no courses stored'); return null; }
-    const courses = snap.val();
-    const q = query.toLowerCase();
-    const words = q.split(' ').filter(w=>w.length>2);
-    console.log('Cache: checking', Object.keys(courses).length, 'courses for words:', words);
-    for (const key of Object.keys(courses)) {
-      const c = courses[key];
-      // Fix Firebase array serialization
-      if (c.holes && !Array.isArray(c.holes)) c.holes = Object.values(c.holes);
-      const nameLower = (c.name||'').toLowerCase();
-      const locationLower = (c.location||'').toLowerCase();
-      const combined = nameLower + ' ' + locationLower;
-      console.log('Cache: checking "'+c.name+'" vs words', words, '→', words.every(w=>combined.includes(w)));
-      if (words.every(w => combined.includes(w))) return c;
+    if (!snap.exists()) return null;
+    const all = snap.val();
+    const words = query.toLowerCase().split(' ').filter(w => w.length > 2);
+    for (const key of Object.keys(all)) {
+      const c = all[key];
+      if (c.holes) c.holes = fixArr(c.holes);
+      const combined = ((c.name || '') + ' ' + (c.location || '')).toLowerCase();
+      if (words.every(w => combined.includes(w)) && c.holes && c.holes.length >= 18) return c;
     }
     return null;
-  } catch(e) { console.log('Cache lookup error:', e.message); return null; }
+  } catch(e) { return null; }
 }
-
 async function loadRecentCourses() {
   try {
-    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.database();
     const snap = await db.ref('courses').once('value');
     if (!snap.exists()) return;
     const courses = Object.values(snap.val())
-      .map(c => { if (c.holes && !Array.isArray(c.holes)) c.holes = Object.values(c.holes); return c; })
-      .sort((a,b) => (b.cachedAt||0) - (a.cachedAt||0))
+      .map(c => { if (c.holes) c.holes = fixArr(c.holes); return c; })
+      .filter(c => c.holes && c.holes.length >= 18)
+      .sort((a, b) => (b.cachedAt || 0) - (a.cachedAt || 0))
       .slice(0, 5);
     if (!courses.length) return;
-    const resultEl = document.getElementById('course-result');
-    resultEl.innerHTML = '<div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#3d5a3d;margin-bottom:8px">Recent Courses</div>'
-      + courses.map(c => {
-          const totalPar = c.holes ? c.holes.reduce((s,h)=>s+h.par,0) : '?';
-          const encoded = encodeURIComponent(JSON.stringify(c));
-          return `<div class="course-card" style="margin-bottom:6px" onclick="confirmCourse(JSON.parse(decodeURIComponent('${encoded}')))">
-            <div class="course-card-name">${c.name}</div>
-            <div class="course-card-meta">${c.location||''} · Par ${totalPar}</div>
+    const el = document.getElementById('course-result');
+    if (!el) return;
+    el.innerHTML = '<div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#3d5a3d;margin-bottom:8px">Recent Courses</div>'
+      + courses.map((c, idx) => {
+          const totalPar = c.holes.reduce((s, h) => s + h.par, 0);
+          return `<div class="course-card" onclick="selectCachedCourse(${idx})">
+            <div class="course-card-name">${c.name} <span style="font-size:10px;color:#5cb85c">📚</span></div>
+            <div class="course-card-meta">${c.location || ''} · Par ${totalPar}</div>
           </div>`;
         }).join('');
-  } catch(e) {}
+    // Store on window for selectCachedCourse to reference
+    window._recentCourses = courses;
+  } catch(e) { console.warn('loadRecentCourses:', e.message); }
+}
+function selectCachedCourse(idx) {
+  const course = window._recentCourses && window._recentCourses[idx];
+  if (course) confirmCourse(course);
 }
 
-// ── COURSE SEARCH — checks cache first, then API ──────────────────
+// ── COURSE SEARCH ─────────────────────────────────────────────────
 async function searchCourse() {
   const query = document.getElementById('course-query').value.trim();
   const statusEl = document.getElementById('course-status');
@@ -417,16 +439,14 @@ async function searchCourse() {
   resultEl.innerHTML = '';
   btn.disabled = true;
 
-  // Check Firebase cache first
   const cached = await getCachedCourse(query);
-  if (cached && cached.holes && cached.holes.length >= 18) {
+  if (cached) {
     btn.disabled = false;
     statusEl.innerHTML = '<span style="color:#5cb85c">⚡ Found in your course library</span>';
     renderCourseResult(cached, true);
     return;
   }
 
-  // Not cached — hit the API
   statusEl.innerHTML = '<span class="spinner"></span>Searching…';
   try {
     const res = await fetch('/api/search-course', {
@@ -437,26 +457,33 @@ async function searchCourse() {
     const parsed = await res.json();
     btn.disabled = false;
     if (!parsed.found || !parsed.holes || parsed.holes.length < 18) {
-      statusEl.innerHTML = '<span style="color:#e07070">No scorecard found for "'+query+'". Try adding the city/state, or skip to use generic values.</span>';
+      statusEl.innerHTML = '<span style="color:#e07070">No scorecard found for "' + query + '". Try adding the city/state.</span>';
       return;
     }
     statusEl.innerHTML = '';
     renderCourseResult(parsed, false);
   } catch(e) {
     btn.disabled = false;
-    statusEl.innerHTML = '<span style="color:#e07070">Search failed. Check your connection and try again.</span>';
+    statusEl.innerHTML = '<span style="color:#e07070">Search failed. Check connection and try again.</span>';
   }
 }
 
 function renderCourseResult(course, fromCache) {
-  const totalPar = course.holes.reduce((s,h)=>s+h.par, 0);
-  const front = course.holes.slice(0,9);
-  const miniHoles = front.map(h=>`<div><div class="cmg-hole">${h.hole}</div><div class="cmg-par">${h.par}</div><div class="cmg-si">${h.si}</div></div>`).join('');
-  const metaParts = [course.location, course.rating?'Rating '+course.rating:null, course.slope?'Slope '+course.slope:null].filter(Boolean).join(' · ');
-  const encoded = encodeURIComponent(JSON.stringify(course));
-  const cacheBadge = fromCache ? '<span style="font-size:10px;color:#5cb85c;margin-left:6px">📚 saved</span>' : '';
+  const totalPar = course.holes.reduce((s, h) => s + h.par, 0);
+  const front = course.holes.slice(0, 9);
+  const miniHoles = front.map(h =>
+    `<div><div class="cmg-hole">${h.hole}</div><div class="cmg-par">${h.par}</div><div class="cmg-si">${h.si}</div></div>`
+  ).join('');
+  const metaParts = [
+    course.location,
+    course.rating ? 'Rating ' + course.rating : null,
+    course.slope ? 'Slope ' + course.slope : null
+  ].filter(Boolean).join(' · ');
+  const cacheBadge = fromCache ? ' <span style="font-size:10px;color:#5cb85c">📚 saved</span>' : '';
+  // Store course on window to avoid JSON-in-onclick issues
+  window._pendingCourse = course;
   document.getElementById('course-result').innerHTML = `
-    <div class="course-card" onclick="confirmCourse(JSON.parse(decodeURIComponent('${encoded}')))">
+    <div class="course-card" onclick="confirmCourse(window._pendingCourse)">
       <div class="course-card-name">${course.name}${cacheBadge}</div>
       <div class="course-card-meta">${metaParts} · Par ${totalPar}</div>
       <div style="font-size:9px;color:#3d5a3d;margin-top:8px;margin-bottom:4px">HOLE / PAR / SI — Front 9</div>
@@ -468,16 +495,20 @@ function renderCourseResult(course, fromCache) {
 function confirmCourse(course) {
   selectedCourse = {
     name: course.name,
-    location: course.location||'',
-    rating: course.rating||null,
-    slope: course.slope||null,
-    holes: course.holes.slice(0,18).map(h=>({hole:h.hole,par:h.par,si:h.si,yardage:h.yardage||null}))
+    location: course.location || '',
+    rating: course.rating || null,
+    slope: course.slope || null,
+    holes: fixArr(course.holes).slice(0, 18).map(h => ({
+      hole: h.hole, par: h.par, si: h.si, yardage: h.yardage || null
+    }))
   };
-  // Save to Firebase cache for next time
   saveCourseToCache(selectedCourse);
-
-  const totalPar = selectedCourse.holes.reduce((s,h)=>s+h.par, 0);
-  const metaParts = [selectedCourse.location,'Par '+totalPar,selectedCourse.rating?'Rating '+selectedCourse.rating+'/'+selectedCourse.slope:null].filter(Boolean).join(' · ');
+  const totalPar = selectedCourse.holes.reduce((s, h) => s + h.par, 0);
+  const metaParts = [
+    selectedCourse.location,
+    'Par ' + totalPar,
+    selectedCourse.rating ? 'Rating ' + selectedCourse.rating + '/' + selectedCourse.slope : null
+  ].filter(Boolean).join(' · ');
   document.getElementById('sel-course-name').textContent = selectedCourse.name;
   document.getElementById('sel-course-meta').textContent = metaParts;
   document.getElementById('course-search-block').style.display = 'none';
@@ -491,18 +522,17 @@ function clearCourse() {
   document.getElementById('course-query').value = '';
   document.getElementById('course-result').innerHTML = '';
   document.getElementById('course-status').innerHTML = '';
-  // Reload recent courses
   loadRecentCourses();
 }
 
-// ── GAME ──────────────────────────────────────────────────────────
+// ── GAME SETUP ────────────────────────────────────────────────────
 function buildState(names, hcps, pv) {
-  const order = [0,1,2,3].sort(()=>Math.random()-.5);
+  const order = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
   const state = {
-    players: names.map((name,i)=>({name,hcp:parseInt(hcps[i])||0,money:0,scores:{}})),
-    pointValue: parseInt(pv)||5,
+    players: names.map((name, i) => ({ name, hcp: parseInt(hcps[i]) || 0, money: 0, scores: {} })),
+    pointValue: parseInt(pv) || 5,
     currentHole: 1,
-    teeOrder: {1:order},
+    teeOrder: { 1: order },
     holeStates: {},
     holeLog: [],
     gameComplete: false
@@ -512,142 +542,178 @@ function buildState(names, hcps, pv) {
 }
 
 async function startGame() {
-  const names = [1,2,3,4].map(i=>document.getElementById('p'+i+'name').value.trim());
-  const hcps  = [1,2,3,4].map(i=>document.getElementById('p'+i+'hcp').value);
+  const names = [1,2,3,4].map(i => document.getElementById('p' + i + 'name').value.trim());
+  const hcps  = [1,2,3,4].map(i => document.getElementById('p' + i + 'hcp').value);
   const pv    = document.getElementById('point-value').value;
   const err   = document.getElementById('err-start');
-  if (names.some(n=>!n)) { err.style.display='block'; return; }
-  err.style.display='none';
-  initFB();
+  if (names.some(n => !n)) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
   const code = genCode();
-  await db.ref('games/'+code).set(buildState(names,hcps,pv));
+  await db.ref('games/' + code).set(buildState(names, hcps, pv));
   subscribe(code);
 }
 
 async function joinGame() {
   const code = document.getElementById('join-code').value.trim().toUpperCase();
   const err  = document.getElementById('err-join');
-  if (!code) { err.style.display='block'; return; }
-  initFB();
-  const snap = await db.ref('games/'+code).once('value');
-  if (!snap.exists()) { err.style.display='block'; return; }
-  err.style.display='none';
+  if (!code) { err.style.display = 'block'; return; }
+  const snap = await db.ref('games/' + code).once('value');
+  if (!snap.exists()) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
   subscribe(code);
 }
 
 function subscribe(code) {
   gameCode = code;
-  gameRef  = db.ref('games/'+code);
+  gameRef  = db.ref('games/' + code);
   gameRef.on('value', snap => {
     if (!snap.exists()) return;
     gs = snap.val();
-    if (gs.players&&!Array.isArray(gs.players)) gs.players=Object.values(gs.players);
-    if (gs.teeOrder) Object.keys(gs.teeOrder).forEach(k=>{
-      if (!Array.isArray(gs.teeOrder[k])) gs.teeOrder[k]=Object.values(gs.teeOrder[k]);
-    });
-    if (gs.holeLog&&!Array.isArray(gs.holeLog)) gs.holeLog=Object.values(gs.holeLog);
-    if (gs.course&&gs.course.holes&&!Array.isArray(gs.course.holes)) gs.course.holes=Object.values(gs.course.holes);
+    // Normalize Firebase-serialized arrays
+    gs.players  = fixArr(gs.players);
+    gs.holeLog  = fixArr(gs.holeLog);
+    if (gs.teeOrder) {
+      Object.keys(gs.teeOrder).forEach(k => {
+        gs.teeOrder[k] = fixArr(gs.teeOrder[k]);
+      });
+    }
+    if (gs.course && gs.course.holes) gs.course.holes = fixArr(gs.course.holes);
     render();
   });
   document.getElementById('screen-lobby').classList.remove('active');
   document.getElementById('screen-game').classList.add('active');
 }
 
-async function patch(obj) { await gameRef.update(obj); }
+async function patchGame(obj) { await gameRef.update(obj); }
 
+// ── RENDER ────────────────────────────────────────────────────────
 function render() {
   if (!gs) return;
-  const hole=gs.currentHole, hs=holeState(gs,hole), order=teeOrder(gs,hole);
-  const wi=wolfIdx(gs,hole), wolf=gs.players[wi], par=holePar(gs,hole);
-  document.getElementById('hdr-code').textContent=gameCode;
-  document.getElementById('hdr-hole').textContent=hole;
-  document.getElementById('hdr-par').textContent=par;
-  document.getElementById('score-hole-label').textContent=hole;
-  const courseEl=document.getElementById('hdr-course');
-  if (gs.course&&gs.course.name) { courseEl.style.display='block'; courseEl.textContent='⛳ '+gs.course.name; }
-  else courseEl.style.display='none';
-  renderBanner(gs,hole,hs,wi,wolf);
-  renderGrid(gs,hole,hs,order,wi,par);
-  renderDecision(gs,hole,hs,order,wi);
-  renderScoreEntry(gs,hole,par);
+  const hole  = gs.currentHole;
+  const hs    = getHoleState(gs, hole);
+  const order = getTeeOrder(gs, hole);
+  const wi    = getWolfIdx(gs, hole);
+  const wolf  = gs.players[wi];
+  const par   = holePar(gs, hole);
+
+  document.getElementById('hdr-code').textContent  = gameCode;
+  document.getElementById('hdr-hole').textContent  = hole;
+  document.getElementById('hdr-par').textContent   = par;
+  document.getElementById('score-hole-label').textContent = hole;
+
+  const courseEl = document.getElementById('hdr-course');
+  if (gs.course && gs.course.name) {
+    courseEl.style.display = 'block';
+    courseEl.textContent = '⛳ ' + gs.course.name;
+  } else {
+    courseEl.style.display = 'none';
+  }
+
+  renderBanner(hole, hs, wi, wolf);
+  renderGrid(hole, hs, order, wi, par);
+  renderDecision(hole, hs, order, wi);
+  renderScoreEntry(hole, par);
 }
 
-function renderBanner(gs,hole,hs,wi,wolf) {
-  const banner=document.getElementById('wolf-banner');
-  const pv=gs.pointValue||5;
-  document.getElementById('banner-name').textContent=wolf.name;
-  if (!hs||(hs.partner===undefined&&!hs.solo)) {
-    banner.className='wolf-banner state-pending';
-    document.getElementById('banner-status').textContent='Awaiting Wolf decision…';
-    document.getElementById('banner-teams').textContent=''; return;
+function renderBanner(hole, hs, wi, wolf) {
+  const banner  = document.getElementById('wolf-banner');
+  const pv      = gs.pointValue || 5;
+  document.getElementById('banner-name').textContent = wolf.name;
+
+  if (!hs || (hs.partner === undefined && hs.partner !== 0 && !hs.solo)) {
+    banner.className = 'wolf-banner state-pending';
+    document.getElementById('banner-status').textContent = 'Awaiting Wolf decision…';
+    document.getElementById('banner-teams').textContent  = '';
+    return;
   }
   if (hs.blind) {
-    banner.className='wolf-banner state-blind';
-    document.getElementById('banner-status').textContent='🟣 Blind Wolf — Solo! ($'+(pv*2)+'/pt)';
-    document.getElementById('banner-teams').textContent=wolf.name+' vs the Field';
+    banner.className = 'wolf-banner state-blind';
+    document.getElementById('banner-status').textContent = '🟣 Blind Wolf — Solo! ($' + (pv * 2) + '/pt)';
+    document.getElementById('banner-teams').textContent  = wolf.name + ' vs the Field';
   } else if (hs.solo) {
-    banner.className='wolf-banner state-solo';
-    document.getElementById('banner-status').textContent='🔴 Going Solo ($'+(pv*2)+'/pt)';
-    document.getElementById('banner-teams').textContent=wolf.name+' vs Everyone';
-  } else if (hs.partner!==undefined&&hs.partner!==null) {
-    banner.className='wolf-banner state-team';
-    const partner=gs.players[hs.partner];
-    const others=gs.players.filter((_,i)=>i!==wi&&i!==hs.partner).map(p=>p.name).join(' & ');
-    document.getElementById('banner-status').textContent='🔵 Team Match ($'+pv+'/pt each)';
-    document.getElementById('banner-teams').textContent=wolf.name+' + '+partner.name+'  vs  '+others;
+    banner.className = 'wolf-banner state-solo';
+    document.getElementById('banner-status').textContent = '🔴 Going Solo ($' + (pv * 2) + '/pt)';
+    document.getElementById('banner-teams').textContent  = wolf.name + ' vs Everyone';
+  } else if (hs.partner !== undefined && hs.partner !== null) {
+    banner.className = 'wolf-banner state-team';
+    const partner = gs.players[hs.partner];
+    const others  = gs.players.filter((_, i) => i !== wi && i !== hs.partner).map(p => p.name).join(' & ');
+    document.getElementById('banner-status').textContent = '🔵 Team Match ($' + pv + '/pt each)';
+    document.getElementById('banner-teams').textContent  = wolf.name + ' + ' + partner.name + '  vs  ' + others;
   }
 }
 
-function renderGrid(gs,hole,hs,order,wi,par) {
-  const grid=document.getElementById('players-grid');
-  grid.innerHTML='';
-  gs.players.forEach((p,i)=>{
-    const teePos=order.indexOf(i)+1;
-    const isWolf=i===wi, isPartner=hs&&hs.partner===i&&!hs.solo;
-    const isSolo=hs&&(hs.solo||hs.blind);
-    const isAgainst=hs&&!isWolf&&(isSolo||(hs.partner!==undefined&&hs.partner!==null&&!isPartner));
-    let cls='player-card', badge='<span class="pc-badge badge-tee">#'+teePos+'</span>';
-    if (isWolf)         { cls+=' is-wolf';    badge='<span class="pc-badge badge-wolf">🐺 Wolf</span>'; }
-    else if (isPartner) { cls+=' is-partner'; badge='<span class="pc-badge badge-partner">Partner</span>'; }
-    else if (isAgainst) { cls+=' is-against'; badge='<span class="pc-badge badge-against">vs Wolf</span>'; }
-    const gross=p.scores&&p.scores[hole]?p.scores[hole]:null;
-    const net=gross!==null?gross-strokes(p.hcp,hole):null;
-    const diff=net!==null?net-par:null;
-    let scoreColor='';
-    if (diff!==null) {
-      if (diff<=-2) scoreColor='color:#4a7fa5';
-      else if (diff===-1) scoreColor='color:#5cb85c';
-      else if (diff===1) scoreColor='color:#e07070';
-      else if (diff>=2) scoreColor='color:#c0392b';
+function renderGrid(hole, hs, order, wi, par) {
+  const grid = document.getElementById('players-grid');
+  grid.innerHTML = '';
+  const dot = '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#c9a84c;vertical-align:middle;margin-left:2px"></span>';
+
+  gs.players.forEach((p, i) => {
+    const teePos    = order.indexOf(i) + 1;
+    const isWolf    = i === wi;
+    const isPartner = hs && hs.partner === i && !hs.solo;
+    const isSolo    = hs && (hs.solo || hs.blind);
+    const isAgainst = hs && !isWolf && (isSolo || (hs.partner !== undefined && hs.partner !== null && !isPartner));
+
+    let cls = 'player-card';
+    let badge = '<span class="pc-badge badge-tee">#' + teePos + '</span>';
+    if (isWolf)         { cls += ' is-wolf';    badge = '<span class="pc-badge badge-wolf">🐺 Wolf</span>'; }
+    else if (isPartner) { cls += ' is-partner'; badge = '<span class="pc-badge badge-partner">Partner</span>'; }
+    else if (isAgainst) { cls += ' is-against'; badge = '<span class="pc-badge badge-against">vs Wolf</span>'; }
+
+    const gross = getScore(p, hole);
+    const s     = getStrokes(p.hcp, hole);
+    const net   = gross !== null ? gross - s : null;
+    const diff  = net !== null ? net - par : null;
+
+    let scoreColor = '';
+    if (diff !== null) {
+      if (diff <= -2)      scoreColor = 'color:#4a7fa5';
+      else if (diff === -1) scoreColor = 'color:#5cb85c';
+      else if (diff === 1)  scoreColor = 'color:#e07070';
+      else if (diff >= 2)   scoreColor = 'color:#c0392b';
     }
-    const money=Math.round(p.money||0), s=strokes(p.hcp,hole);
-    const dot='<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9a84c;vertical-align:middle;margin-left:2px"></span>';
-    const dots=s>0?dot.repeat(s):'';
-    const strokeLabel=s>0?'<span style="color:#c9a84c;font-weight:600">−'+s+' stroke'+(s>1?'s':'')+'</span> · ':'';
-    grid.innerHTML+=`<div class="${cls}">
+
+    const money      = Math.round(p.money || 0);
+    const dots       = s > 0 ? dot.repeat(s) : '';
+    const strokeLabel = s > 0
+      ? '<span style="color:#c9a84c;font-weight:600">−' + s + ' stroke' + (s > 1 ? 's' : '') + '</span> · '
+      : '';
+
+    grid.innerHTML += `<div class="${cls}">
       <div class="pc-top"><div class="pc-name">${p.name}${dots}</div>${badge}</div>
-      <div class="pc-score ${gross?'has-score':'no-score'}" style="${scoreColor}">${gross||'—'}</div>
+      <div class="pc-score ${gross !== null ? 'has-score' : 'no-score'}" style="${scoreColor}">${gross !== null ? gross : '—'}</div>
       <div class="pc-meta">${strokeLabel}HCP ${p.hcp}</div>
       <div class="pc-money ${moneyClass(money)}">${fmt$(money)}</div>
     </div>`;
   });
 }
 
-function renderDecision(gs,hole,hs,order,wi) {
-  const section=document.getElementById('wolf-decision');
-  const content=document.getElementById('wd-content');
-  const allDone=gs.players.every(p=>p.scores&&p.scores[hole]);
-  if (allDone) { section.style.display='none'; return; }
-  section.style.display='block';
-  if (hs&&(hs.solo||hs.blind||(hs.partner!==undefined&&hs.partner!==null))) {
-    content.innerHTML='<div class="decision-locked">Decision locked ✓</div>'; return;
+function renderDecision(hole, hs, order, wi) {
+  const section = document.getElementById('wolf-decision');
+  const content = document.getElementById('wd-content');
+
+  // Hide if all scores are in for this hole
+  const allScored = gs.players.every(p => getScore(p, hole) !== null);
+  if (allScored) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  // Decision already made
+  if (hs && (hs.solo || hs.blind || (hs.partner !== undefined && hs.partner !== null))) {
+    content.innerHTML = '<div class="decision-locked">Decision locked ✓</div>';
+    return;
   }
-  const partnerBtns=order.filter(i=>i!==wi).map(i=>`
-    <button class="partner-btn" onclick="pickPartner(${i})">
+
+  // Show options
+  const partnerBtns = order
+    .filter(i => i !== wi)
+    .map(i => `<button class="partner-btn" onclick="pickPartner(${i})">
       <span>${gs.players[i].name}</span>
-      <span class="partner-btn-sub">Teed #${order.indexOf(i)+1}</span>
-    </button>`).join('');
-  content.innerHTML=`
+      <span class="partner-btn-sub">Teed #${order.indexOf(i) + 1}</span>
+    </button>`)
+    .join('');
+
+  content.innerHTML = `
     <button class="wd-btn blind-btn" onclick="goBlindWolf()">
       <span class="wd-btn-icon">🟣</span>
       <div><div>Blind Wolf</div><div class="wd-btn-desc">Declare solo before anyone tees — 2× stakes</div></div>
@@ -660,150 +726,239 @@ function renderDecision(gs,hole,hs,order,wi) {
     </button>`;
 }
 
-function renderScoreEntry(gs,hole,par) {
-  const grid=document.getElementById('score-grid');
-  grid.innerHTML='';
-  gs.players.forEach((p,i)=>{
-    const cur=pending[i]!==undefined?pending[i]:(p.scores&&p.scores[hole]?p.scores[hole]:par);
-    const s=strokes(p.hcp,hole);
-    grid.innerHTML+=`<div class="score-card">
-      <div class="sc-name">${p.name}${s>0?' <span class="stroke-dot">●</span>':''}</div>
+function renderScoreEntry(hole, par) {
+  const grid = document.getElementById('score-grid');
+  grid.innerHTML = '';
+  gs.players.forEach((p, i) => {
+    const saved = getScore(p, hole);
+    const cur   = pending[i] !== undefined ? pending[i] : (saved !== null ? saved : par);
+    const s     = getStrokes(p.hcp, hole);
+    grid.innerHTML += `<div class="score-card">
+      <div class="sc-name">${p.name}${s > 0 ? ' <span class="stroke-dot">●</span>' : ''}</div>
       <div class="sc-controls">
         <button class="sc-btn" onclick="adj(${i},-1)">−</button>
         <div class="sc-val" id="sv${i}">${cur}</div>
         <button class="sc-btn" onclick="adj(${i},1)">+</button>
       </div>
-      <div class="sc-par">Par ${par}${s>0?' · −'+s+' net':''}</div>
+      <div class="sc-par">Par ${par}${s > 0 ? ' · −' + s + ' net' : ''}</div>
     </div>`;
   });
 }
 
-function adj(i,d) {
-  const hole=gs.currentHole, par=holePar(gs,hole);
-  if (pending[i]===undefined) pending[i]=(gs.players[i].scores&&gs.players[i].scores[hole])?gs.players[i].scores[hole]:par;
-  pending[i]=Math.max(1,pending[i]+d);
-  document.getElementById('sv'+i).textContent=pending[i];
+function adj(i, d) {
+  const hole = gs.currentHole;
+  const par  = holePar(gs, hole);
+  const saved = getScore(gs.players[i], hole);
+  if (pending[i] === undefined) pending[i] = saved !== null ? saved : par;
+  pending[i] = Math.max(1, pending[i] + d);
+  document.getElementById('sv' + i).textContent = pending[i];
 }
 
+// ── WOLF DECISIONS ────────────────────────────────────────────────
 async function pickPartner(pid) {
-  const h=gs.currentHole;
-  await patch({['holeStates/'+h+'/partner']:pid,['holeStates/'+h+'/solo']:false,['holeStates/'+h+'/blind']:false});
+  const h = gs.currentHole;
+  await patchGame({
+    ['holeStates/' + h + '/partner']: pid,
+    ['holeStates/' + h + '/solo']: false,
+    ['holeStates/' + h + '/blind']: false
+  });
 }
 async function goSolo() {
-  const h=gs.currentHole;
-  await patch({['holeStates/'+h+'/solo']:true,['holeStates/'+h+'/blind']:false,['holeStates/'+h+'/partner']:null});
+  const h = gs.currentHole;
+  await patchGame({
+    ['holeStates/' + h + '/solo']: true,
+    ['holeStates/' + h + '/blind']: false,
+    ['holeStates/' + h + '/partner']: null
+  });
 }
 async function goBlindWolf() {
-  const h=gs.currentHole;
-  await patch({['holeStates/'+h+'/blind']:true,['holeStates/'+h+'/solo']:true,['holeStates/'+h+'/partner']:null});
+  const h = gs.currentHole;
+  await patchGame({
+    ['holeStates/' + h + '/blind']: true,
+    ['holeStates/' + h + '/solo']: true,
+    ['holeStates/' + h + '/partner']: null
+  });
 }
 
+// ── SUBMIT SCORES ─────────────────────────────────────────────────
 async function submitScores() {
-  const hole=gs.currentHole, hs=holeState(gs,hole), order=teeOrder(gs,hole);
-  const wi=wolfIdx(gs,hole), par=holePar(gs,hole), pv=gs.pointValue||5;
-  if (!hs||(hs.partner===undefined&&!hs.solo)) { alert('Wolf must make a decision first.'); return; }
-  const gross=gs.players.map((p,i)=>pending[i]!==undefined?pending[i]:(p.scores&&p.scores[hole]?p.scores[hole]:par));
-  const net=gross.map((g,i)=>g-strokes(gs.players[i].hcp,hole));
-  const deltas=[0,0,0,0];
-  let logMsg='';
-  if (hs.solo||hs.blind) {
-    const mult=hs.blind?2:1, wolfNet=net[wi], bestOther=Math.min(...net.filter((_,i)=>i!==wi));
-    if (wolfNet<bestOther) {
-      deltas[wi]+=pv*3*mult;
-      gs.players.forEach((_,i)=>{if(i!==wi)deltas[i]-=pv*mult;});
-      logMsg='H'+hole+': '+gs.players[wi].name+' wins '+(hs.blind?'Blind ':'')+'Solo! +$'+(pv*3*mult);
+  const hole  = gs.currentHole;
+  const hs    = getHoleState(gs, hole);
+  const order = getTeeOrder(gs, hole);
+  const wi    = getWolfIdx(gs, hole);
+  const par   = holePar(gs, hole);
+  const pv    = gs.pointValue || 5;
+
+  if (!hs || (hs.partner === undefined && hs.partner !== 0 && !hs.solo)) {
+    alert('Wolf must make a decision first.');
+    return;
+  }
+
+  const gross = gs.players.map((p, i) => {
+    if (pending[i] !== undefined) return pending[i];
+    const saved = getScore(p, hole);
+    return saved !== null ? saved : par;
+  });
+  const net    = gross.map((g, i) => g - getStrokes(gs.players[i].hcp, hole));
+  const deltas = [0, 0, 0, 0];
+  let logMsg   = '';
+
+  if (hs.solo || hs.blind) {
+    const mult      = hs.blind ? 2 : 1;
+    const wolfNet   = net[wi];
+    const bestOther = Math.min(...net.filter((_, i) => i !== wi));
+    if (wolfNet < bestOther) {
+      deltas[wi] += pv * 3 * mult;
+      gs.players.forEach((_, i) => { if (i !== wi) deltas[i] -= pv * mult; });
+      logMsg = 'H' + hole + ': ' + gs.players[wi].name + ' wins ' + (hs.blind ? 'Blind ' : '') + 'Solo! +$' + (pv * 3 * mult);
     } else {
-      deltas[wi]-=pv*3*mult;
-      gs.players.forEach((_,i)=>{if(i!==wi)deltas[i]+=pv*mult;});
-      logMsg='H'+hole+': Wolf loses solo. '+gs.players[wi].name+' -$'+(pv*3*mult);
+      deltas[wi] -= pv * 3 * mult;
+      gs.players.forEach((_, i) => { if (i !== wi) deltas[i] += pv * mult; });
+      logMsg = 'H' + hole + ': Wolf loses solo. ' + gs.players[wi].name + ' -$' + (pv * 3 * mult);
     }
   } else {
-    const wolfTeam=[wi,hs.partner], otherTeam=[0,1,2,3].filter(i=>!wolfTeam.includes(i));
-    const wolfBest=Math.min(...wolfTeam.map(i=>net[i])), otherBest=Math.min(...otherTeam.map(i=>net[i]));
-    if (wolfBest<otherBest) {
-      wolfTeam.forEach(i=>deltas[i]+=pv); otherTeam.forEach(i=>deltas[i]-=pv);
-      logMsg='H'+hole+': Wolf team wins (+$'+pv+' each)';
-    } else if (otherBest<wolfBest) {
-      wolfTeam.forEach(i=>deltas[i]-=pv); otherTeam.forEach(i=>deltas[i]+=pv);
-      logMsg='H'+hole+': Opposition wins (+$'+pv+' each)';
-    } else { logMsg='H'+hole+': Halved — no money moves'; }
+    const wolfTeam  = [wi, hs.partner];
+    const otherTeam = [0, 1, 2, 3].filter(i => !wolfTeam.includes(i));
+    const wolfBest  = Math.min(...wolfTeam.map(i => net[i]));
+    const otherBest = Math.min(...otherTeam.map(i => net[i]));
+    if (wolfBest < otherBest) {
+      wolfTeam.forEach(i => deltas[i] += pv);
+      otherTeam.forEach(i => deltas[i] -= pv);
+      logMsg = 'H' + hole + ': Wolf team wins (+$' + pv + ' each)';
+    } else if (otherBest < wolfBest) {
+      wolfTeam.forEach(i => deltas[i] -= pv);
+      otherTeam.forEach(i => deltas[i] += pv);
+      logMsg = 'H' + hole + ': Opposition wins (+$' + pv + ' each)';
+    } else {
+      logMsg = 'H' + hole + ': Halved — no money moves';
+    }
   }
-  const p={};
-  gs.players.forEach((pl,i)=>{
-    p['players/'+i+'/scores/'+hole]=gross[i];
-    p['players/'+i+'/money']=Math.round((pl.money||0)+deltas[i]);
+
+  const p = {};
+  gs.players.forEach((pl, i) => {
+    p['players/' + i + '/scores/' + hole] = gross[i];
+    p['players/' + i + '/money'] = Math.round((pl.money || 0) + deltas[i]);
   });
-  const log=Array.isArray(gs.holeLog)?[...gs.holeLog,logMsg]:[logMsg];
-  p['holeLog']=log;
-  if (hole<18) {
-    const next=hole+1, prevWolf=order[order.length-1];
-    const nextOrder=[prevWolf,...order.slice(0,order.length-1)];
-    p['currentHole']=next; p['teeOrder/'+next]=nextOrder;
-  } else { p['gameComplete']=true; }
-  Object.keys(pending).forEach(k=>delete pending[k]);
+  const log = [...gs.holeLog, logMsg];
+  p['holeLog'] = log;
+
+  if (hole < 18) {
+    const next      = hole + 1;
+    const prevWolf  = order[order.length - 1];
+    const nextOrder = [prevWolf, ...order.slice(0, order.length - 1)];
+    p['currentHole']       = next;
+    p['teeOrder/' + next]  = nextOrder;
+  } else {
+    p['gameComplete'] = true;
+  }
+
+  Object.keys(pending).forEach(k => delete pending[k]);
   await gameRef.update(p);
 }
 
+// ── TABS ──────────────────────────────────────────────────────────
 function showTab(name) {
-  ['hole','scorecard','leaderboard'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display=t===name?'block':'none';
-    document.getElementById('nav-'+t).classList.toggle('active',t===name);
+  ['hole', 'scorecard', 'leaderboard'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === name ? 'block' : 'none';
+    document.getElementById('nav-' + t).classList.toggle('active', t === name);
   });
-  if (name==='scorecard') renderScorecard();
-  if (name==='leaderboard') renderLeaderboard();
+  if (name === 'scorecard')   renderScorecard();
+  if (name === 'leaderboard') renderLeaderboard();
 }
 
 function renderScorecard() {
   if (!gs) return;
-  let html=`<table class="scorecard"><thead><tr><th>Hole</th><th>Par</th><th>SI</th>${gs.players.map(p=>'<th>'+p.name.split(' ')[0]+'</th>').join('')}</tr></thead><tbody>`;
-  let outPar=0,inPar=0;
-  const outTot=gs.players.map(()=>0),inTot=gs.players.map(()=>0);
-  for (let h=1;h<=18;h++) {
-    const par=holePar(gs,h),si=holeSI(gs,h),hs=holeState(gs,h),order=teeOrder(gs,h),wi=order[order.length-1];
-    if (h<=9) outPar+=par; else inPar+=par;
-    let tag='';
-    if (hs) { if(hs.blind) tag='2×'; else if(hs.solo) tag='solo'; else if(hs.partner!=null) tag='team'; }
-    html+=`<tr><td class="hole-num">${h}<sup style="color:#c9a84c;font-size:8px">${wi!==undefined?' W':''}</sup></td><td>${par}</td><td style="color:#3d5a3d">${si}</td>`;
-    gs.players.forEach((p,i)=>{
-      const g=p.scores&&p.scores[h]?p.scores[h]:null,s=strokes(p.hcp,h);
-      const n=g!==null?g-s:null,d=n!==null?n-par:null;
-      let cls='';
-      if(d!==null){if(d<=-2)cls='score-eagle';else if(d===-1)cls='score-birdie';else if(d===1)cls='score-bogey';else if(d>=2)cls='score-dbl';}
-      if(h<=9)outTot[i]+=g||0;else inTot[i]+=g||0;
-      const sdot=s>0?'<span style="display:inline-flex;gap:1px;vertical-align:middle;margin-left:2px">'+'<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#c9a84c"></span>'.repeat(s)+'</span>':'';
-      html+=`<td><span class="${cls}">${g||''}</span>${g?sdot:''}</td>`;
+  let html = `<table class="scorecard"><thead><tr>
+    <th>Hole</th><th>Par</th><th>SI</th>
+    ${gs.players.map(p => '<th>' + p.name.split(' ')[0] + '</th>').join('')}
+  </tr></thead><tbody>`;
+
+  let outPar = 0, inPar = 0;
+  const outTot = gs.players.map(() => 0);
+  const inTot  = gs.players.map(() => 0);
+  const dot5   = '<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#c9a84c;margin-left:1px;vertical-align:middle"></span>';
+
+  for (let h = 1; h <= 18; h++) {
+    const par   = holePar(gs, h);
+    const si    = holeSI(gs, h);
+    const hs    = getHoleState(gs, h);
+    const order = getTeeOrder(gs, h);
+    const wi    = order[order.length - 1];
+    if (h <= 9) outPar += par; else inPar += par;
+
+    let tag = '';
+    if (hs) {
+      if (hs.blind)             tag = '2×';
+      else if (hs.solo)         tag = 'solo';
+      else if (hs.partner != null) tag = 'team';
+    }
+
+    html += `<tr>
+      <td class="hole-num">${h}<sup style="color:#c9a84c;font-size:8px"> W</sup></td>
+      <td>${par}</td>
+      <td style="color:#3d5a3d">${si}</td>`;
+
+    gs.players.forEach((p, i) => {
+      const g = getScore(p, h);
+      const s = getStrokes(p.hcp, h);
+      const n = g !== null ? g - s : null;
+      const d = n !== null ? n - par : null;
+      let cls = '';
+      if (d !== null) {
+        if (d <= -2)      cls = 'score-eagle';
+        else if (d === -1) cls = 'score-birdie';
+        else if (d === 1)  cls = 'score-bogey';
+        else if (d >= 2)   cls = 'score-dbl';
+      }
+      if (h <= 9) outTot[i] += g || 0; else inTot[i] += g || 0;
+      const sdots = s > 0 ? dot5.repeat(s) : '';
+      html += `<td><span class="${cls}">${g !== null ? g : ''}</span>${g !== null ? sdots : ''}</td>`;
     });
-    html+=`</tr>`;
-    if (h===9) html+=`<tr class="subtotal"><td>OUT</td><td>${outPar}</td><td></td>${gs.players.map((_,i)=>'<td>'+(outTot[i]||'')+'</td>').join('')}</tr>`;
+
+    html += `</tr>`;
+    if (h === 9) {
+      html += `<tr class="subtotal"><td>OUT</td><td>${outPar}</td><td></td>
+        ${gs.players.map((_, i) => '<td>' + (outTot[i] || '') + '</td>').join('')}</tr>`;
+    }
   }
-  html+=`<tr class="subtotal"><td>IN</td><td>${inPar}</td><td></td>${gs.players.map((_,i)=>'<td>'+(inTot[i]||'')+'</td>').join('')}</tr>`;
-  html+=`<tr class="total-row"><td>TOT</td><td>${outPar+inPar}</td><td></td>${gs.players.map((_,i)=>'<td>'+(outTot[i]+inTot[i]||'')+'</td>').join('')}</tr>`;
-  html+=`</tbody></table>`;
-  document.getElementById('scorecard-inner').innerHTML=html;
+
+  html += `<tr class="subtotal"><td>IN</td><td>${inPar}</td><td></td>
+    ${gs.players.map((_, i) => '<td>' + (inTot[i] || '') + '</td>').join('')}</tr>`;
+  html += `<tr class="total-row"><td>TOT</td><td>${outPar + inPar}</td><td></td>
+    ${gs.players.map((_, i) => '<td>' + ((outTot[i] + inTot[i]) || '') + '</td>').join('')}</tr>`;
+  html += `</tbody></table>`;
+  document.getElementById('scorecard-inner').innerHTML = html;
 }
 
 function renderLeaderboard() {
   if (!gs) return;
-  const sorted=gs.players.map((p,i)=>({...p,i})).sort((a,b)=>(b.money||0)-(a.money||0));
-  const rankCls=['gold','silver','bronze'];
-  document.getElementById('lb-list').innerHTML=sorted.map((p,r)=>`
+  const sorted   = gs.players.map((p, i) => ({ ...p, i })).sort((a, b) => (b.money || 0) - (a.money || 0));
+  const rankCls  = ['gold', 'silver', 'bronze'];
+  document.getElementById('lb-list').innerHTML = sorted.map((p, r) => `
     <div class="lb-row">
-      <div class="lb-rank ${rankCls[r]||''}">${r+1}</div>
-      <div class="lb-info"><div class="lb-name">${p.name}</div><div class="lb-sub">HCP ${p.hcp}</div></div>
-      <div class="lb-money ${moneyClass(p.money||0)}">${fmt$(p.money||0)}</div>
+      <div class="lb-rank ${rankCls[r] || ''}">${r + 1}</div>
+      <div class="lb-info">
+        <div class="lb-name">${p.name}</div>
+        <div class="lb-sub">HCP ${p.hcp}</div>
+      </div>
+      <div class="lb-money ${moneyClass(p.money || 0)}">${fmt$(p.money || 0)}</div>
     </div>`).join('');
-  const log=Array.isArray(gs.holeLog)?gs.holeLog:[];
-  document.getElementById('hole-log').innerHTML=log.length
-    ?[...log].reverse().map(l=>'<div class="log-entry">'+l+'</div>').join('')
-    :'<div class="log-entry" style="color:#3d5a3d">No holes completed yet.</div>';
+
+  const log = Array.isArray(gs.holeLog) ? gs.holeLog : [];
+  document.getElementById('hole-log').innerHTML = log.length
+    ? [...log].reverse().map(l => '<div class="log-entry">' + l + '</div>').join('')
+    : '<div class="log-entry" style="color:#3d5a3d">No holes completed yet.</div>';
 }
 
 function confirmEndGame() {
   if (confirm('End this game and return to lobby?')) {
     if (gameRef) gameRef.off();
-    gs=null;gameCode=null;gameRef=null;
+    gs = null; gameCode = null; gameRef = null;
+    Object.keys(pending).forEach(k => delete pending[k]);
     document.getElementById('screen-game').classList.remove('active');
     document.getElementById('screen-lobby').classList.add('active');
+    showTab('hole');
+    loadRecentCourses();
   }
 }
 </script>
