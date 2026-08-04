@@ -310,6 +310,9 @@ function initFB() {
   db = firebase.database();
 }
 
+// Load recent courses as soon as page opens
+window.addEventListener('DOMContentLoaded', () => loadRecentCourses());
+
 function holePar(state, hole) {
   return (state&&state.course&&state.course.holes&&state.course.holes[hole-1])
     ? state.course.holes[hole-1].par : DEFAULT_PAR[hole-1];
@@ -341,7 +344,62 @@ function wolfIdx(state, hole) {
   const o = teeOrder(state, hole); return o[o.length-1];
 }
 
-// ── COURSE SEARCH — calls our serverless proxy ────────────────────
+// ── COURSE CACHE (Firebase) ───────────────────────────────────────
+function cacheKey(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]/g,'_').slice(0,60);
+}
+
+async function saveCourseToCache(course) {
+  try {
+    initFB();
+    const key = cacheKey(course.name);
+    await db.ref('courses/'+key).set({ ...course, cachedAt: Date.now() });
+  } catch(e) { console.log('Cache save failed:', e.message); }
+}
+
+async function getCachedCourse(query) {
+  try {
+    initFB();
+    const snap = await db.ref('courses').once('value');
+    if (!snap.exists()) return null;
+    const courses = snap.val();
+    const q = query.toLowerCase();
+    // Find any cached course whose name contains the query words
+    const words = q.split(' ').filter(w=>w.length>2);
+    for (const key of Object.keys(courses)) {
+      const c = courses[key];
+      const nameLower = (c.name||'').toLowerCase();
+      const locationLower = (c.location||'').toLowerCase();
+      const combined = nameLower + ' ' + locationLower;
+      if (words.every(w => combined.includes(w))) return c;
+    }
+    return null;
+  } catch(e) { return null; }
+}
+
+async function loadRecentCourses() {
+  try {
+    initFB();
+    const snap = await db.ref('courses').once('value');
+    if (!snap.exists()) return;
+    const courses = Object.values(snap.val())
+      .sort((a,b) => (b.cachedAt||0) - (a.cachedAt||0))
+      .slice(0, 5);
+    if (!courses.length) return;
+    const resultEl = document.getElementById('course-result');
+    resultEl.innerHTML = '<div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#3d5a3d;margin-bottom:8px">Recent Courses</div>'
+      + courses.map(c => {
+          const totalPar = c.holes ? c.holes.reduce((s,h)=>s+h.par,0) : '?';
+          const encoded = encodeURIComponent(JSON.stringify(c));
+          return `<div class="course-card" style="margin-bottom:6px" onclick="confirmCourse(JSON.parse(decodeURIComponent('${encoded}')))">
+            <div class="course-card-name">${c.name}</div>
+            <div class="course-card-meta">${c.location||''} · Par ${totalPar}</div>
+          </div>`;
+        }).join('');
+  } catch(e) {}
+}
+
+// ── COURSE SEARCH — checks cache first, then API ──────────────────
 async function searchCourse() {
   const query = document.getElementById('course-query').value.trim();
   const statusEl = document.getElementById('course-status');
@@ -349,10 +407,21 @@ async function searchCourse() {
   const btn = document.getElementById('course-search-btn');
   if (!query) return;
 
-  statusEl.innerHTML = '<span class="spinner"></span>Searching…';
+  statusEl.innerHTML = '<span class="spinner"></span>Checking course library…';
   resultEl.innerHTML = '';
   btn.disabled = true;
 
+  // Check Firebase cache first
+  const cached = await getCachedCourse(query);
+  if (cached && cached.holes && cached.holes.length >= 18) {
+    btn.disabled = false;
+    statusEl.innerHTML = '<span style="color:#5cb85c">⚡ Found in your course library</span>';
+    renderCourseResult(cached, true);
+    return;
+  }
+
+  // Not cached — hit the API
+  statusEl.innerHTML = '<span class="spinner"></span>Searching…';
   try {
     const res = await fetch('/api/search-course', {
       method: 'POST',
@@ -361,28 +430,28 @@ async function searchCourse() {
     });
     const parsed = await res.json();
     btn.disabled = false;
-
     if (!parsed.found || !parsed.holes || parsed.holes.length < 18) {
       statusEl.innerHTML = '<span style="color:#e07070">No scorecard found for "'+query+'". Try adding the city/state, or skip to use generic values.</span>';
       return;
     }
     statusEl.innerHTML = '';
-    renderCourseResult(parsed);
+    renderCourseResult(parsed, false);
   } catch(e) {
     btn.disabled = false;
     statusEl.innerHTML = '<span style="color:#e07070">Search failed. Check your connection and try again.</span>';
   }
 }
 
-function renderCourseResult(course) {
+function renderCourseResult(course, fromCache) {
   const totalPar = course.holes.reduce((s,h)=>s+h.par, 0);
   const front = course.holes.slice(0,9);
   const miniHoles = front.map(h=>`<div><div class="cmg-hole">${h.hole}</div><div class="cmg-par">${h.par}</div><div class="cmg-si">${h.si}</div></div>`).join('');
   const metaParts = [course.location, course.rating?'Rating '+course.rating:null, course.slope?'Slope '+course.slope:null].filter(Boolean).join(' · ');
   const encoded = encodeURIComponent(JSON.stringify(course));
+  const cacheBadge = fromCache ? '<span style="font-size:10px;color:#5cb85c;margin-left:6px">📚 saved</span>' : '';
   document.getElementById('course-result').innerHTML = `
     <div class="course-card" onclick="confirmCourse(JSON.parse(decodeURIComponent('${encoded}')))">
-      <div class="course-card-name">${course.name}</div>
+      <div class="course-card-name">${course.name}${cacheBadge}</div>
       <div class="course-card-meta">${metaParts} · Par ${totalPar}</div>
       <div style="font-size:9px;color:#3d5a3d;margin-top:8px;margin-bottom:4px">HOLE / PAR / SI — Front 9</div>
       <div class="course-mini-grid">${miniHoles}</div>
@@ -398,6 +467,9 @@ function confirmCourse(course) {
     slope: course.slope||null,
     holes: course.holes.slice(0,18).map(h=>({hole:h.hole,par:h.par,si:h.si,yardage:h.yardage||null}))
   };
+  // Save to Firebase cache for next time
+  saveCourseToCache(selectedCourse);
+
   const totalPar = selectedCourse.holes.reduce((s,h)=>s+h.par, 0);
   const metaParts = [selectedCourse.location,'Par '+totalPar,selectedCourse.rating?'Rating '+selectedCourse.rating+'/'+selectedCourse.slope:null].filter(Boolean).join(' · ');
   document.getElementById('sel-course-name').textContent = selectedCourse.name;
@@ -413,6 +485,8 @@ function clearCourse() {
   document.getElementById('course-query').value = '';
   document.getElementById('course-result').innerHTML = '';
   document.getElementById('course-status').innerHTML = '';
+  // Reload recent courses
+  loadRecentCourses();
 }
 
 // ── GAME ──────────────────────────────────────────────────────────
