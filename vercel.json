@@ -1,1 +1,9 @@
-
+{
+  "version": 2,
+  "functions": {
+    "api/search-course.js": {
+      "memory": 256,
+      "maxDuration": 10
+    }
+  }
+}

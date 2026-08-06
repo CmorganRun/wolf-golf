@@ -1,1 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Wolf Golf</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐺</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<style>
+:root{
+  --bg:#0f1a0f;
+  --card:#1a2e1a;
+  --border:#2d4a2d;
+  --gold:#c9a84c;
+  --red:#c0392b;
+  --darkred:#7a2419;
+  --blue:#4a7fa5;
+  --green:#3f8f5c;
+  --text:#eef2ee;
+  --sub:#9db09d;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  padding-bottom:76px;
+}
+.bebas{font-family:'Bebas Neue',sans-serif; letter-spacing:0.03em;}
+h1,h2,h3{margin:0; font-family:'Bebas Neue',sans-serif; letter-spacing:0.03em;}
+button{font-family:'Inter',sans-serif; cursor:pointer; border:none;}
+input{font-family:'Inter',sans-serif;}
+a{color:var(--gold);}
 
+/* ---------- layout shells ---------- */
+.screen{max-width:520px; margin:0 auto; padding:16px;}
+.hidden{display:none !important;}
+
+.header{
+  position:sticky; top:0; z-index:20;
+  background:linear-gradient(180deg,#101c10 0%,#0f1a0fee 90%,#0f1a0f00 100%);
+  backdrop-filter:blur(6px);
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--border);
+}
+.header-row{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.brand{display:flex; align-items:baseline; gap:8px;}
+.brand .bebas{font-size:26px; color:var(--gold);}
+.brand .code{font-size:12px; color:var(--sub); letter-spacing:0.15em; font-weight:600;}
+.hole-pill{
+  background:var(--card); border:1px solid var(--border); border-radius:999px;
+  padding:6px 14px; font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--gold);
+  letter-spacing:0.05em;
+}
+.header-meta{display:flex; gap:14px; margin-top:6px; font-size:12px; color:var(--sub);}
+.header-meta b{color:var(--text);}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:14px;
+}
+.card h3{font-size:15px; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; font-family:'Inter'; font-weight:700;}
+.section-title{font-family:'Bebas Neue'; font-size:22px; color:var(--text); margin-bottom:4px;}
+.muted{color:var(--sub); font-size:13px;}
+
+/* ---------- inputs ---------- */
+.field{margin-bottom:12px;}
+.field label{display:block; font-size:12px; color:var(--sub); margin-bottom:6px; font-weight:600; letter-spacing:0.03em;}
+.field input{
+  width:100%; padding:11px 12px; border-radius:9px;
+  background:#0f1a0f; border:1px solid var(--border); color:var(--text); font-size:15px;
+}
+.field input:focus{outline:none; border-color:var(--gold);}
+.row-2{display:grid; grid-template-columns:1fr 100px; gap:10px;}
+.inline-search{display:flex; gap:8px;}
+.inline-search input{flex:1;}
+
+/* ---------- buttons ---------- */
+.btn{
+  padding:12px 16px; border-radius:10px; font-weight:700; font-size:14px;
+  letter-spacing:0.02em; text-align:center;
+}
+.btn-gold{background:var(--gold); color:#1a1405;}
+.btn-outline{background:transparent; border:1px solid var(--border); color:var(--text);}
+.btn-blue{background:var(--blue); color:#08131c;}
+.btn-red{background:var(--red); color:#fff;}
+.btn-block{width:100%; display:block;}
+.btn:active{transform:scale(0.98);}
+.btn:disabled{opacity:0.4;}
+
+/* ---------- lobby specifics ---------- */
+.course-result{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 12px; border:1px solid var(--border); border-radius:10px; margin-top:8px;
+  background:#132213;
+}
+.course-result:active{border-color:var(--gold);}
+.course-result .cname{font-weight:600; font-size:14px;}
+.course-result .cloc{font-size:12px; color:var(--sub);}
+.selected-course{
+  display:flex; justify-content:space-between; align-items:center;
+  background:#152715; border:1px solid var(--gold); border-radius:10px; padding:12px;
+  margin-top:10px;
+}
+.recent-title{font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--sub); margin:14px 0 6px;}
+.player-block{border-top:1px solid var(--border); padding-top:10px; margin-top:10px;}
+.player-block:first-of-type{border-top:none; margin-top:0; padding-top:0;}
+
+/* ---------- wolf decision ---------- */
+.tee-order{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+.tee-chip{
+  background:#132213; border:1px solid var(--border); border-radius:999px;
+  padding:6px 12px; font-size:13px; display:flex; align-items:center; gap:6px;
+}
+.tee-chip .num{color:var(--sub); font-size:11px;}
+.tee-chip.wolf{border-color:var(--gold); color:var(--gold); font-weight:700;}
+.decision-grid{display:grid; gap:8px;}
+.decision-btn{
+  width:100%; padding:14px; border-radius:10px; background:#132213; border:1px solid var(--border);
+  color:var(--text); font-weight:700; font-size:14px; text-align:left; display:flex; justify-content:space-between; align-items:center;
+}
+.decision-btn .tag{font-size:11px; color:var(--sub); font-weight:500;}
+.decision-btn.blind{border-color:var(--red); color:#f3a08f;}
+.decision-btn.solo{border-color:var(--red); color:#f3a08f;}
+.decision-btn.partner{border-color:var(--blue); color:#a9cbe4;}
+.decision-btn:active{transform:scale(0.98);}
+
+.matchup-banner{
+  border-radius:12px; padding:14px; margin-bottom:14px; text-align:center;
+  border:1px solid var(--border);
+}
+.matchup-banner.team{background:#132a3a; border-color:var(--blue);}
+.matchup-banner.solo{background:#3a1712; border-color:var(--red);}
+.matchup-banner .title{font-family:'Bebas Neue'; font-size:22px; letter-spacing:0.04em;}
+.matchup-banner.team .title{color:#a9cbe4;}
+.matchup-banner.solo .title{color:#f3a08f;}
+.matchup-banner .sub{font-size:12px; color:var(--sub); margin-top:2px;}
+
+/* ---------- score entry ---------- */
+.score-row{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:10px 0; border-bottom:1px solid var(--border);
+}
+.score-row:last-child{border-bottom:none;}
+.player-id{display:flex; align-items:center; gap:8px;}
+.dot{width:8px; height:8px; border-radius:50%; background:var(--gold); display:inline-block;}
+.dot.two{box-shadow:4px 0 0 var(--gold);}
+.player-name{font-weight:600; font-size:14px;}
+.player-name .role{font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:0.06em; display:block; font-weight:700;}
+.score-input-wrap{display:flex; align-items:center; gap:6px;}
+.score-btn{
+  width:32px; height:32px; border-radius:8px; background:#0f1a0f; border:1px solid var(--border);
+  color:var(--text); font-size:18px; display:flex; align-items:center; justify-content:center; font-weight:700;
+}
+.score-num{width:40px; text-align:center; font-family:'Bebas Neue'; font-size:22px; background:transparent; border:none; color:var(--text);}
+
+/* ---------- bottom nav ---------- */
+.bottom-nav{
+  position:fixed; bottom:0; left:0; right:0; z-index:30;
+  background:#101c10; border-top:1px solid var(--border);
+  display:flex;
+}
+.bottom-nav button{
+  flex:1; background:none; color:var(--sub); padding:12px 0 10px; font-size:11px;
+  text-transform:uppercase; letter-spacing:0.08em; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.bottom-nav button .ic{font-size:18px;}
+.bottom-nav button.active{color:var(--gold);}
+
+/* ---------- scorecard table ---------- */
+.sc-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+.sc-table th{
+  color:var(--sub); font-weight:600; text-align:center; padding:6px 3px; font-size:10px;
+  text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid var(--border);
+}
+.sc-table td{text-align:center; padding:7px 3px; border-bottom:1px solid #1e341e;}
+.sc-table td.hole-cell{color:var(--sub); font-weight:700; text-align:left; padding-left:4px;}
+.score-pill{
+  display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:22px;
+  border-radius:6px; font-weight:700; position:relative;
+}
+.score-pill.eagle{background:#1c3a5c; color:#8fc2f0;}
+.score-pill.birdie{background:#173d24; color:#7fd39a;}
+.score-pill.par{background:transparent; color:var(--text);}
+.score-pill.bogey{background:#3a1c17; color:#e8907e;}
+.score-pill.dbogey{background:#3a0f0a; color:#ff9a86;}
+.stroke-dot{
+  position:absolute; top:-2px; right:-2px; width:6px; height:6px; border-radius:50%; background:var(--gold);
+}
+.sc-scroll{overflow-x:auto;}
+.sc-legend{display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; font-size:11px; color:var(--sub);}
+.sc-legend .lg{display:flex; align-items:center; gap:5px;}
+.lg .sw{width:10px; height:10px; border-radius:3px;}
+
+/* ---------- standings ---------- */
+.stand-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0; border-bottom:1px solid var(--border);
+}
+.stand-row:last-child{border-bottom:none;}
+.stand-left{display:flex; align-items:center; gap:12px;}
+.rank{font-family:'Bebas Neue'; font-size:20px; color:var(--sub); width:22px;}
+.stand-name{font-weight:700; font-size:15px;}
+.stand-money{font-family:'Bebas Neue'; font-size:22px;}
+.stand-money.pos{color:#7fd39a;}
+.stand-money.neg{color:#ff9a86;}
+.stand-money.zero{color:var(--sub);}
+
+.log-entry{padding:10px 0; border-bottom:1px solid var(--border); font-size:13px;}
+.log-entry:last-child{border-bottom:none;}
+.log-entry .lh{display:flex; justify-content:space-between; font-weight:700;}
+.log-entry .ld{color:var(--sub); font-size:12px; margin-top:2px;}
+
+/* ---------- misc ---------- */
+.center{text-align:center;}
+.mt8{margin-top:8px;} .mt12{margin-top:12px;} .mt16{margin-top:16px;} .mt20{margin-top:20px;}
+.mb0{margin-bottom:0;}
+.toast{
+  position:fixed; bottom:88px; left:50%; transform:translateX(-50%);
+  background:#132213; border:1px solid var(--gold); color:var(--gold); font-weight:700;
+  padding:10px 18px; border-radius:999px; font-size:13px; z-index:50; opacity:0; transition:opacity .25s;
+  pointer-events:none;
+}
+.toast.show{opacity:1;}
+.spinner{width:16px; height:16px; border-radius:50%; border:2px solid var(--border); border-top-color:var(--gold); animation:spin .7s linear infinite; display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{color:var(--sub); font-size:13px; text-align:center; padding:14px 0;}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* =====================================================================
+   FIREBASE
+===================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyD42RJec8-IlMX5t7nVS9FyVIWz_-h87yE",
+  authDomain: "wolf-golf-1b33e.firebaseapp.com",
+  databaseURL: "https://wolf-golf-1b33e-default-rtdb.firebaseio.com",
+  projectId: "wolf-golf-1b33e",
+  storageBucket: "wolf-golf-1b33e.firebasestorage.app",
+  messagingSenderId: "987533651209",
+  appId: "1:987533651209:web:ac7e66321e8765b63f77d8"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* =====================================================================
+   HELPERS
+===================================================================== */
+
+// Firebase turns objects with dense numeric keys into arrays automatically,
+// but sparse/typed numeric keys can come back as plain objects instead.
+// fixArr normalizes any {"0":..,"1":..} shaped value back into a real array.
+// NOTE: never run this on holeStates - its keys are hole numbers and are
+// meant to stay a string-keyed object.
+function fixArr(v) {
+  if (v === null || v === undefined) return v;
+  if (Array.isArray(v)) return v;
+  if (typeof v === 'object') {
+    const keys = Object.keys(v);
+    if (keys.length && keys.every(k => /^\d+$/.test(k))) {
+      const arr = [];
+      keys.forEach(k => { arr[parseInt(k, 10)] = v[k]; });
+      return arr;
+    }
+  }
+  return v;
+}
+
+function fmtMoney(n) {
+  const sign = n > 0 ? '+' : (n < 0 ? '-' : '');
+  return `${sign}$${Math.abs(n).toFixed(2).replace(/\.00$/, '')}`;
+}
+
+function genGameCode() {
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ'; // no I/O to avoid confusion
+  let code = '';
+  for (let i = 0; i < 6; i++) code += letters[Math.floor(Math.random() * letters.length)];
+  return code;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// USGA-style stroke allocation: whole strokes for every 18 handicap points,
+// plus one more on holes whose stroke index falls within the remainder.
+function strokesForHole(handicap, si) {
+  const h = Math.round(Number(handicap) || 0);
+  if (h <= 0 || !si) return 0;
+  const base = Math.floor(h / 18);
+  const remainder = h - base * 18;
+  return base + (si <= remainder ? 1 : 0);
+}
+
+function netScoreColor(score, par) {
+  const diff = score - par;
+  if (diff <= -2) return 'eagle';
+  if (diff === -1) return 'birdie';
+  if (diff === 0) return 'par';
+  if (diff === 1) return 'bogey';
+  return 'dbogey';
+}
+
+/* =====================================================================
+   APP STATE
+===================================================================== */
+let gameCode = null;
+let state = null;          // live mirror of games/{code} from Firebase
+let currentTab = 'hole';
+let gameRef = null;
+
+// lobby-only (pre-creation) local state
+let lobby = {
+  courseQuery: '',
+  searchResults: [],
+  searching: false,
+  selectedCourse: null,     // normalized course w/ holes
+  recentCourses: [],
+  players: [
+    { name: '', handicap: '' },
+    { name: '', handicap: '' },
+    { name: '', handicap: '' },
+    { name: '', handicap: '' }
+  ],
+  perPoint: '1',
+  joinCode: '',
+  mode: 'create' // 'create' | 'join'
+};
+
+/* =====================================================================
+   COURSE SEARCH / CACHE
+===================================================================== */
+async function loadRecentCourses() {
+  try {
+    const snap = await db.ref('courses').orderByChild('lastUsedAt').limitToLast(5).once('value');
+    const val = snap.val() || {};
+    const list = Object.values(val).sort((a, b) => (b.lastUsedAt || 0) - (a.lastUsedAt || 0));
+    lobby.recentCourses = list;
+  } catch (e) {
+    lobby.recentCourses = [];
+  }
+  render();
+}
+
+function courseKey(id) {
+  return String(id).replace(/[.#$\[\]\/]/g, '_');
+}
+
+async function searchCourses() {
+  const q = lobby.courseQuery.trim();
+  if (!q) return;
+  lobby.searching = true;
+  render();
+  try {
+    const res = await fetch(`/api/search-course?search_query=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    lobby.searchResults = data.courses || data.results || (Array.isArray(data) ? data : []);
+  } catch (e) {
+    showToast('Course search failed');
+    lobby.searchResults = [];
+  }
+  lobby.searching = false;
+  render();
+}
+
+async function pickCourse(courseStub) {
+  // courseStub: either a search result {id, club_name, course_name, ...}
+  // or an already-normalized cached course {id, name, holes, ...}
+  const id = courseStub.id;
+  const key = courseKey(id);
+
+  if (courseStub.holes) {
+    // already normalized (came from recent-courses cache)
+    lobby.selectedCourse = courseStub;
+    db.ref(`courses/${key}/lastUsedAt`).set(Date.now());
+    render();
+    return;
+  }
+
+  showToast('Loading course...');
+  // 1. check Firebase cache first
+  try {
+    const snap = await db.ref(`courses/${key}`).once('value');
+    const cached = snap.val();
+    if (cached && cached.holes) {
+      lobby.selectedCourse = cached;
+      db.ref(`courses/${key}/lastUsedAt`).set(Date.now());
+      render();
+      showToast('Loaded from cache');
+      return;
+    }
+  } catch (e) { /* fall through to API */ }
+
+  // 2. cache miss -> call our serverless function
+  try {
+    const res = await fetch(`/api/search-course?courseId=${encodeURIComponent(id)}`);
+    const normalized = await res.json();
+    if (!normalized || !normalized.holes) {
+      showToast('Course has no hole data');
+      return;
+    }
+    normalized.lastUsedAt = Date.now();
+    await db.ref(`courses/${key}`).set(normalized);
+    lobby.selectedCourse = normalized;
+    render();
+  } catch (e) {
+    showToast('Could not load course detail');
+  }
+}
+
+function clearSelectedCourse() {
+  lobby.selectedCourse = null;
+  render();
+}
+
+/* =====================================================================
+   GAME CREATION / JOIN / SYNC
+===================================================================== */
+function initialTeeOrder() {
+  return [0, 1, 2, 3]; // last player (index 3) is Wolf on hole 1
+}
+
+async function createGame() {
+  const course = lobby.selectedCourse;
+  if (!course) { showToast('Pick a course first'); return; }
+  const players = lobby.players.map(p => ({
+    name: (p.name || '').trim() || 'Player',
+    handicap: Number(p.handicap) || 0
+  }));
+  const perPoint = Number(lobby.perPoint) || 1;
+
+  const code = genGameCode();
+  const teeOrder1 = initialTeeOrder();
+
+  const gameData = {
+    status: 'active',
+    createdAt: Date.now(),
+    courseId: course.id,
+    courseName: course.name,
+    courseData: { holes: course.holes },
+    players: players,
+    perPoint: perPoint,
+    currentHole: 1,
+    totals: [0, 0, 0, 0],
+    holeLog: [],
+    teeOrder: { '1': teeOrder1 },
+    holeStates: { '1': { wolf: teeOrder1[3], partner: null, solo: false, blind: false, locked: false } }
+  };
+
+  try {
+    await db.ref(`games/${code}`).set(gameData);
+    gameCode = code;
+    subscribeGame(code);
+  } catch (e) {
+    showToast('Could not create game: ' + e.message);
+  }
+}
+
+async function joinGame() {
+  const code = lobby.joinCode.trim().toUpperCase();
+  if (code.length !== 6) { showToast('Enter the 6-letter code'); return; }
+  try {
+    const snap = await db.ref(`games/${code}`).once('value');
+    if (!snap.exists()) { showToast('Game not found'); return; }
+    gameCode = code;
+    subscribeGame(code);
+  } catch (e) {
+    showToast('Could not join game');
+  }
+}
+
+function subscribeGame(code) {
+  if (gameRef) gameRef.off();
+  gameRef = db.ref(`games/${code}`);
+  gameRef.on('value', snap => {
+    const data = snap.val();
+    if (!data) return;
+    state = normalizeState(data);
+    render();
+  });
+}
+
+function normalizeState(data) {
+  const s = { ...data };
+  s.players = fixArr(s.players) || [];
+  s.holeLog = fixArr(s.holeLog) || [];
+  s.totals = fixArr(s.totals) || [0, 0, 0, 0];
+  // holeStates is intentionally left untouched (string-keyed object, not array-fixed)
+  s.holeStates = s.holeStates || {};
+  // teeOrder container stays an object keyed by hole string; each hole's
+  // value is an array of player indices that may need fixArr applied.
+  const teeOrder = {};
+  Object.keys(s.teeOrder || {}).forEach(h => {
+    teeOrder[h] = fixArr(s.teeOrder[h]) || [];
+  });
+  s.teeOrder = teeOrder;
+  return s;
+}
+
+/* =====================================================================
+   WOLF DECISIONS
+===================================================================== */
+function currentHoleState() {
+  return state.holeStates[String(state.currentHole)] || {};
+}
+function currentTeeOrder() {
+  return state.teeOrder[String(state.currentHole)] || [0, 1, 2, 3];
+}
+
+async function makeDecision({ partner = null, solo = false, blind = false }) {
+  const hole = state.currentHole;
+  const hs = currentHoleState();
+  const update = {
+    wolf: hs.wolf,
+    partner: partner,
+    solo: solo,
+    blind: blind,
+    locked: true
+  };
+  await db.ref(`games/${gameCode}/holeStates/${String(hole)}`).set(update);
+}
+
+/* =====================================================================
+   SCORING / MONEY
+===================================================================== */
+function computeHoleResult(holeState, netScores, players) {
+  const wolfIdx = holeState.wolf;
+  const isSoloish = holeState.solo || holeState.blind;
+  let teamA, teamB;
+  if (isSoloish) {
+    teamA = [wolfIdx];
+    teamB = [0, 1, 2, 3].filter(i => i !== wolfIdx);
+  } else {
+    teamA = [wolfIdx, holeState.partner];
+    teamB = [0, 1, 2, 3].filter(i => !teamA.includes(i));
+  }
+  const bestA = Math.min(...teamA.map(i => netScores[i]));
+  const bestB = Math.min(...teamB.map(i => netScores[i]));
+  const mult = holeState.blind ? 2 : 1;
+  const X = (Number(state.perPoint) || 1) * mult;
+
+  const deltas = [0, 0, 0, 0];
+  let resultText;
+
+  if (bestA === bestB) {
+    resultText = 'Push — hole tied';
+  } else {
+    const aWins = bestA < bestB;
+    if (isSoloish) {
+      deltas[wolfIdx] = aWins ? 3 * X : -3 * X;
+      teamB.forEach(i => { deltas[i] = aWins ? -X : X; });
+      const label = holeState.blind ? 'Blind Wolf' : 'Solo Wolf';
+      resultText = aWins ? `${label} ${players[wolfIdx].name} wins` : `${label} ${players[wolfIdx].name} loses`;
+    } else {
+      teamA.forEach(i => { deltas[i] = aWins ? X : -X; });
+      teamB.forEach(i => { deltas[i] = aWins ? -X : X; });
+      resultText = aWins
+        ? `${players[wolfIdx].name} & ${players[holeState.partner].name} win`
+        : `${players[wolfIdx].name} & ${players[holeState.partner].name} lose`;
+    }
+  }
+  return { deltas, resultText, bestA, bestB, teamA, teamB };
+}
+
+async function saveHoleScores(grossScores) {
+  const hole = state.currentHole;
+  const holeInfo = state.courseData.holes[hole - 1];
+  const hs = currentHoleState();
+  const players = state.players;
+
+  const netScores = grossScores.map((g, i) => g - strokesForHole(players[i].handicap, holeInfo.si));
+  const result = computeHoleResult(hs, netScores, players);
+
+  const newTotals = state.totals.map((t, i) => t + result.deltas[i]);
+  const logEntry = {
+    hole,
+    par: holeInfo.par,
+    wolf: hs.wolf,
+    partner: hs.partner,
+    solo: !!hs.solo,
+    blind: !!hs.blind,
+    grossScores,
+    netScores,
+    deltas: result.deltas,
+    resultText: result.resultText
+  };
+  const newLog = [...state.holeLog, logEntry];
+
+  const updates = {};
+  updates[`games/${gameCode}/totals`] = newTotals;
+  updates[`games/${gameCode}/holeLog`] = newLog;
+
+  const isLastHole = hole >= state.courseData.holes.length;
+  if (!isLastHole) {
+    const nextHole = hole + 1;
+    const prevOrder = currentTeeOrder();
+    const nextOrder = [prevOrder[3], prevOrder[0], prevOrder[1], prevOrder[2]];
+    updates[`games/${gameCode}/currentHole`] = nextHole;
+    updates[`games/${gameCode}/teeOrder/${String(nextHole)}`] = nextOrder;
+    updates[`games/${gameCode}/holeStates/${String(nextHole)}`] = {
+      wolf: nextOrder[3], partner: null, solo: false, blind: false, locked: false
+    };
+  }
+
+  await db.ref().update(updates);
+  if (isLastHole) {
+    currentTab = 'standings';
+    showToast('Final hole logged!');
+  } else {
+    showToast(`Hole ${hole}: ${result.resultText}`);
+  }
+}
+
+async function endGame() {
+  if (!confirm('End this game for everyone?')) return;
+  await db.ref(`games/${gameCode}/status`).set('ended');
+}
+
+function backToLobby() {
+  if (gameRef) gameRef.off();
+  gameRef = null;
+  gameCode = null;
+  state = null;
+  currentTab = 'hole';
+  loadRecentCourses();
+  render();
+}
+
+/* =====================================================================
+   RENDER: LOBBY
+===================================================================== */
+function renderLobby() {
+  const l = lobby;
+
+  const searchResultsHtml = l.searching
+    ? `<div class="center mt12"><span class="spinner"></span></div>`
+    : (l.searchResults || []).slice(0, 8).map(c => `
+        <div class="course-result" data-action="pick-course" data-id="${c.id}">
+          <div>
+            <div class="cname">${escapeHtml(c.course_name || c.club_name || 'Unnamed course')}</div>
+            <div class="cloc">${escapeHtml([c.club_name !== c.course_name ? c.club_name : '', c.location?.city || c.city, c.location?.state || c.state].filter(Boolean).join(' · '))}</div>
+          </div>
+          <div class="muted">›</div>
+        </div>`).join('');
+
+  const recentHtml = l.recentCourses.length ? `
+    <div class="recent-title">Recent Courses</div>
+    ${l.recentCourses.map(c => `
+      <div class="course-result" data-action="pick-recent" data-key="${courseKey(c.id)}">
+        <div>
+          <div class="cname">${escapeHtml(c.name)}</div>
+          <div class="cloc">${escapeHtml(c.holes.length + ' holes')}${c.teeName ? ' · ' + escapeHtml(c.teeName) : ''}</div>
+        </div>
+        <div class="muted">›</div>
+      </div>`).join('')}
+  ` : '';
+
+  const courseSection = l.selectedCourse ? `
+    <div class="selected-course">
+      <div>
+        <div class="cname">${escapeHtml(l.selectedCourse.name)}</div>
+        <div class="cloc muted">${l.selectedCourse.holes.length} holes${l.selectedCourse.teeName ? ' · ' + escapeHtml(l.selectedCourse.teeName) + ' tees' : ''}</div>
+      </div>
+      <button class="btn btn-outline" data-action="clear-course" style="padding:8px 12px;">Change</button>
+    </div>
+  ` : `
+    <div class="inline-search">
+      <input id="course-query" type="text" placeholder="Search course name..." value="${escapeHtml(l.courseQuery)}">
+      <button class="btn btn-gold" data-action="search-course">Search</button>
+    </div>
+    <div id="search-results">${searchResultsHtml || (l.courseQuery && !l.searching ? '<div class="empty">No results — try another search</div>' : '')}</div>
+    ${recentHtml}
+  `;
+
+  const playersHtml = l.players.map((p, i) => `
+    <div class="player-block">
+      <div class="row-2">
+        <div class="field mb0">
+          <label>Player ${i + 1}</label>
+          <input type="text" data-action="player-name" data-idx="${i}" placeholder="Name" value="${escapeHtml(p.name)}">
+        </div>
+        <div class="field mb0">
+          <label>Hcp</label>
+          <input type="number" data-action="player-hcp" data-idx="${i}" placeholder="0" value="${escapeHtml(p.handicap)}">
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="screen">
+      <div class="center mt16 mt20">
+        <h1 class="bebas" style="font-size:44px; color:var(--gold);">🐺 WOLF GOLF</h1>
+        <div class="muted mt8">Live multiplayer betting scorecard</div>
+      </div>
+
+      <div class="mt20" style="display:flex; gap:8px; margin-bottom:6px;">
+        <button class="btn ${l.mode === 'create' ? 'btn-gold' : 'btn-outline'}" style="flex:1;" data-action="set-mode" data-mode="create">New Game</button>
+        <button class="btn ${l.mode === 'join' ? 'btn-gold' : 'btn-outline'}" style="flex:1;" data-action="set-mode" data-mode="join">Join Game</button>
+      </div>
+
+      ${l.mode === 'create' ? `
+        <div class="card mt16">
+          <h3>Course</h3>
+          ${courseSection}
+        </div>
+
+        <div class="card">
+          <h3>Players &amp; Handicaps</h3>
+          ${playersHtml}
+        </div>
+
+        <div class="card">
+          <h3>Stakes</h3>
+          <div class="field mb0">
+            <label>$ per point</label>
+            <input type="number" id="per-point" min="0" step="0.5" value="${escapeHtml(l.perPoint)}">
+          </div>
+        </div>
+
+        <button class="btn btn-gold btn-block" style="padding:16px; font-size:16px;" data-action="create-game">Create Game &amp; Get Code</button>
+      ` : `
+        <div class="card mt16">
+          <h3>Join With Code</h3>
+          <div class="field mb0">
+            <label>6-letter game code</label>
+            <input type="text" id="join-code" maxlength="6" style="text-transform:uppercase; letter-spacing:0.2em; font-family:'Bebas Neue'; font-size:22px;" value="${escapeHtml(l.joinCode)}" placeholder="ABCDEF">
+          </div>
+        </div>
+        <button class="btn btn-gold btn-block" style="padding:16px; font-size:16px;" data-action="join-game">Join Game</button>
+      `}
+    </div>
+  `;
+}
+
+/* =====================================================================
+   RENDER: GAME - HEADER + NAV
+===================================================================== */
+function renderHeader() {
+  const holeInfo = state.courseData.holes[state.currentHole - 1] || {};
+  return `
+    <div class="header">
+      <div class="header-row">
+        <div class="brand">
+          <span class="bebas">🐺 WOLF GOLF</span>
+          <span class="code">${state.courseName ? escapeHtml(state.courseName) : ''}</span>
+        </div>
+        <div class="hole-pill">HOLE ${state.currentHole}</div>
+      </div>
+      <div class="header-meta">
+        <span>Code: <b>${gameCode}</b></span>
+        <span>Par <b>${holeInfo.par ?? '-'}</b></span>
+        <span>SI <b>${holeInfo.si ?? '-'}</b></span>
+        <span>$<b>${state.perPoint}</b>/pt</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderBottomNav() {
+  const tabs = [
+    { id: 'hole', label: 'Hole', ic: '⛳' },
+    { id: 'card', label: 'Card', ic: '📋' },
+    { id: 'standings', label: 'Standings', ic: '🏆' }
+  ];
+  return `
+    <div class="bottom-nav">
+      ${tabs.map(t => `
+        <button class="${currentTab === t.id ? 'active' : ''}" data-action="set-tab" data-tab="${t.id}">
+          <span class="ic">${t.ic}</span>${t.label}
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+/* =====================================================================
+   RENDER: HOLE TAB
+===================================================================== */
+function renderHoleTab() {
+  const hole = state.currentHole;
+  const holeInfo = state.courseData.holes[hole - 1] || { par: '-', si: '-', yardage: '-' };
+  const teeOrder = currentTeeOrder();
+  const hs = currentHoleState();
+  const players = state.players;
+  const wolfIdx = hs.wolf;
+
+  const teeOrderHtml = `
+    <div class="tee-order">
+      ${teeOrder.map((pIdx, pos) => `
+        <div class="tee-chip ${pIdx === wolfIdx ? 'wolf' : ''}">
+          <span class="num">${pos + 1}</span> ${escapeHtml(players[pIdx].name)} ${pIdx === wolfIdx ? '🐺' : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  let decisionHtml;
+  if (!hs.locked) {
+    const nonWolf = [0, 1, 2, 3].filter(i => i !== wolfIdx);
+    decisionHtml = `
+      <div class="card">
+        <h3>${escapeHtml(players[wolfIdx].name)} is the Wolf 🐺</h3>
+        <div class="muted mt8" style="margin-bottom:12px;">Blind Wolf must be called before any tee shot. Otherwise, pick a partner after seeing shots, or go solo.</div>
+        <div class="decision-grid">
+          <button class="decision-btn blind" data-action="decide-blind">
+            Blind Wolf <span class="tag">before any tee shot · 2× stakes</span>
+          </button>
+          ${nonWolf.map(i => `
+            <button class="decision-btn partner" data-action="decide-partner" data-idx="${i}">
+              Partner with ${escapeHtml(players[i].name)} <span class="tag">2 vs 2</span>
+            </button>
+          `).join('')}
+          <button class="decision-btn solo" data-action="decide-solo">
+            Go Solo <span class="tag">Wolf vs all 3 · 2× stakes</span>
+          </button>
+        </div>
+      </div>
+    `;
+  } else {
+    let bannerClass, title, sub;
+    if (hs.blind) {
+      bannerClass = 'solo';
+      title = `BLIND WOLF: ${players[wolfIdx].name}`;
+      sub = `vs. everyone · stakes ×2`;
+    } else if (hs.solo) {
+      bannerClass = 'solo';
+      title = `SOLO: ${players[wolfIdx].name}`;
+      sub = `vs. everyone · stakes ×2`;
+    } else {
+      bannerClass = 'team';
+      title = `${players[wolfIdx].name} & ${players[hs.partner].name}`;
+      const others = [0, 1, 2, 3].filter(i => i !== wolfIdx && i !== hs.partner);
+      sub = `vs. ${players[others[0]].name} & ${players[others[1]].name}`;
+    }
+    decisionHtml = `
+      <div class="matchup-banner ${bannerClass}">
+        <div class="title">${escapeHtml(title)}</div>
+        <div class="sub">${escapeHtml(sub)}</div>
+      </div>
+      ${renderScoreEntry(hole, holeInfo, players)}
+    `;
+  }
+
+  return `
+    <div class="screen">
+      <div class="section-title">Tee Order</div>
+      ${teeOrderHtml}
+      ${decisionHtml}
+    </div>
+  `;
+}
+
+function renderScoreEntry(hole, holeInfo, players) {
+  const rows = players.map((p, i) => {
+    const strokes = strokesForHole(p.handicap, holeInfo.si);
+    return `
+      <div class="score-row">
+        <div class="player-id">
+          <span class="dot ${strokes >= 2 ? 'two' : ''}" style="${strokes === 0 ? 'background:transparent;' : ''}"></span>
+          <div class="player-name">${escapeHtml(p.name)}
+            <span class="role">${strokes > 0 ? strokes + ' stroke' + (strokes > 1 ? 's' : '') : ''}</span>
+          </div>
+        </div>
+        <div class="score-input-wrap">
+          <button class="score-btn" data-action="score-dec" data-idx="${i}">−</button>
+          <input class="score-num" type="number" id="score-${i}" data-idx="${i}" value="${holeInfo.par || ''}" inputmode="numeric">
+          <button class="score-btn" data-action="score-inc" data-idx="${i}">+</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="card">
+      <h3>Scores — Hole ${hole} (Par ${holeInfo.par})</h3>
+      ${rows}
+      <button class="btn btn-gold btn-block mt16" data-action="save-hole">Save Hole &amp; Continue</button>
+    </div>
+  `;
+}
+
+/* =====================================================================
+   RENDER: SCORECARD TAB
+===================================================================== */
+function renderCardTab() {
+  const holes = state.courseData.holes;
+  const players = state.players;
+  const logByHole = {};
+  state.holeLog.forEach(l => { logByHole[l.hole] = l; });
+
+  const rows = holes.map(h => {
+    const log = logByHole[h.number];
+    const cells = players.map((p, i) => {
+      const strokes = strokesForHole(p.handicap, h.si);
+      if (!log) {
+        return `<td>${strokes > 0 ? `<span class="score-pill par" style="position:relative;"><span class="stroke-dot"></span></span>` : ''}</td>`;
+      }
+      const score = log.grossScores[i];
+      const cls = netScoreColor(score, h.par);
+      return `<td><span class="score-pill ${cls}">${score}${strokes > 0 ? '<span class="stroke-dot"></span>' : ''}</span></td>`;
+    }).join('');
+    return `
+      <tr>
+        <td class="hole-cell">${h.number}</td>
+        <td>${h.par}</td>
+        <td>${h.si ?? '-'}</td>
+        ${cells}
+      </tr>
+    `;
+  }).join('');
+
+  const totalsRow = `
+    <tr style="border-top:2px solid var(--border); font-weight:700;">
+      <td class="hole-cell">Tot</td>
+      <td>${holes.reduce((s, h) => s + (h.par || 0), 0)}</td>
+      <td>-</td>
+      ${players.map((p, i) => {
+        const tot = state.holeLog.reduce((s, l) => s + (l.grossScores ? l.grossScores[i] : 0), 0);
+        return `<td>${tot || '-'}</td>`;
+      }).join('')}
+    </tr>
+  `;
+
+  return `
+    <div class="screen">
+      <div class="section-title">Scorecard</div>
+      <div class="muted mt8" style="margin-bottom:12px;">${escapeHtml(state.courseName)} · gold dot = stroke given</div>
+      <div class="card sc-scroll">
+        <table class="sc-table">
+          <thead>
+            <tr>
+              <th>Hole</th><th>Par</th><th>SI</th>
+              ${players.map(p => `<th>${escapeHtml(shortName(p.name))}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+            ${totalsRow}
+          </tbody>
+        </table>
+        <div class="sc-legend">
+          <div class="lg"><span class="sw" style="background:#1c3a5c;"></span>Eagle+</div>
+          <div class="lg"><span class="sw" style="background:#173d24;"></span>Birdie</div>
+          <div class="lg"><span class="sw" style="background:transparent; border:1px solid var(--border);"></span>Par</div>
+          <div class="lg"><span class="sw" style="background:#3a1c17;"></span>Bogey</div>
+          <div class="lg"><span class="sw" style="background:#3a0f0a;"></span>Double+</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function shortName(name) {
+  return (name || '').split(' ')[0].slice(0, 8);
+}
+
+/* =====================================================================
+   RENDER: STANDINGS TAB
+===================================================================== */
+function renderStandingsTab() {
+  const players = state.players.map((p, i) => ({ ...p, idx: i, total: state.totals[i] || 0 }));
+  players.sort((a, b) => b.total - a.total);
+
+  const standRows = players.map((p, rank) => `
+    <div class="stand-row">
+      <div class="stand-left">
+        <span class="rank">${rank + 1}</span>
+        <div>
+          <div class="stand-name">${escapeHtml(p.name)}</div>
+          <div class="muted" style="font-size:11px;">Hcp ${p.handicap}</div>
+        </div>
+      </div>
+      <div class="stand-money ${p.total > 0 ? 'pos' : (p.total < 0 ? 'neg' : 'zero')}">${fmtMoney(p.total)}</div>
+    </div>
+  `).join('');
+
+  const logRows = [...state.holeLog].reverse().map(l => `
+    <div class="log-entry">
+      <div class="lh"><span>Hole ${l.hole} · Par ${l.par}</span><span>${l.resultText}</span></div>
+      <div class="ld">${state.players.map((p, i) => `${shortName(p.name)} ${fmtMoney(l.deltas[i])}`).join(' · ')}</div>
+    </div>
+  `).join('') || `<div class="empty">No holes logged yet</div>`;
+
+  return `
+    <div class="screen">
+      <div class="section-title">Standings</div>
+      <div class="card mt8">
+        ${standRows}
+      </div>
+      <div class="card">
+        <h3>Hole Log</h3>
+        ${logRows}
+      </div>
+      <button class="btn btn-red btn-block mt8" data-action="end-game">End Game</button>
+    </div>
+  `;
+}
+
+/* =====================================================================
+   RENDER: ENDED SCREEN
+===================================================================== */
+function renderEnded() {
+  const players = state.players.map((p, i) => ({ ...p, total: state.totals[i] || 0 }));
+  players.sort((a, b) => b.total - a.total);
+  return `
+    <div class="screen">
+      <div class="center mt20">
+        <h1 class="bebas" style="font-size:38px; color:var(--gold);">GAME OVER</h1>
+        <div class="muted mt8">${escapeHtml(state.courseName)} · ${state.holeLog.length} holes played</div>
+      </div>
+      <div class="card mt20">
+        ${players.map((p, rank) => `
+          <div class="stand-row">
+            <div class="stand-left">
+              <span class="rank">${rank + 1}</span>
+              <div class="stand-name">${escapeHtml(p.name)}</div>
+            </div>
+            <div class="stand-money ${p.total > 0 ? 'pos' : (p.total < 0 ? 'neg' : 'zero')}">${fmtMoney(p.total)}</div>
+          </div>
+        `).join('')}
+      </div>
+      <button class="btn btn-gold btn-block" data-action="back-to-lobby">New Game</button>
+    </div>
+  `;
+}
+
+/* =====================================================================
+   MASTER RENDER
+===================================================================== */
+function render() {
+  const app = document.getElementById('app');
+  if (!state) {
+    app.innerHTML = renderLobby();
+    return;
+  }
+  if (state.status === 'ended') {
+    app.innerHTML = renderHeader() + renderEnded();
+    return;
+  }
+  let tabHtml;
+  if (currentTab === 'hole') tabHtml = renderHoleTab();
+  else if (currentTab === 'card') tabHtml = renderCardTab();
+  else tabHtml = renderStandingsTab();
+
+  app.innerHTML = renderHeader() + tabHtml + renderBottomNav();
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+/* =====================================================================
+   EVENT DELEGATION
+===================================================================== */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+
+  switch (action) {
+    case 'set-mode':
+      lobby.mode = btn.dataset.mode;
+      render();
+      break;
+    case 'search-course':
+      lobby.courseQuery = document.getElementById('course-query').value;
+      searchCourses();
+      break;
+    case 'pick-course': {
+      const id = btn.dataset.id;
+      const stub = lobby.searchResults.find(c => String(c.id) === String(id));
+      if (stub) pickCourse(stub);
+      break;
+    }
+    case 'pick-recent': {
+      const key = btn.dataset.key;
+      const c = lobby.recentCourses.find(c => courseKey(c.id) === key);
+      if (c) pickCourse(c);
+      break;
+    }
+    case 'clear-course':
+      clearSelectedCourse();
+      break;
+    case 'create-game':
+      createGame();
+      break;
+    case 'join-game':
+      lobby.joinCode = document.getElementById('join-code').value;
+      joinGame();
+      break;
+    case 'set-tab':
+      currentTab = btn.dataset.tab;
+      render();
+      break;
+    case 'decide-blind':
+      makeDecision({ blind: true });
+      break;
+    case 'decide-solo':
+      makeDecision({ solo: true });
+      break;
+    case 'decide-partner':
+      makeDecision({ partner: Number(btn.dataset.idx) });
+      break;
+    case 'score-inc': {
+      const inp = document.getElementById('score-' + btn.dataset.idx);
+      inp.value = Number(inp.value || 0) + 1;
+      break;
+    }
+    case 'score-dec': {
+      const inp = document.getElementById('score-' + btn.dataset.idx);
+      inp.value = Math.max(1, Number(inp.value || 1) - 1);
+      break;
+    }
+    case 'save-hole': {
+      const scores = [0, 1, 2, 3].map(i => Number(document.getElementById('score-' + i).value) || 0);
+      if (scores.some(s => s <= 0)) { showToast('Enter all 4 scores'); return; }
+      saveHoleScores(scores);
+      break;
+    }
+    case 'end-game':
+      endGame();
+      break;
+    case 'back-to-lobby':
+      backToLobby();
+      break;
+  }
+});
+
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.id === 'course-query') lobby.courseQuery = t.value;
+  if (t.id === 'per-point') lobby.perPoint = t.value;
+  if (t.id === 'join-code') lobby.joinCode = t.value;
+  if (t.dataset && t.dataset.action === 'player-name') lobby.players[t.dataset.idx].name = t.value;
+  if (t.dataset && t.dataset.action === 'player-hcp') lobby.players[t.dataset.idx].handicap = t.value;
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    if (e.target.id === 'course-query') { e.preventDefault(); lobby.courseQuery = e.target.value; searchCourses(); }
+    if (e.target.id === 'join-code') { e.preventDefault(); lobby.joinCode = e.target.value; joinGame(); }
+  }
+});
+
+/* =====================================================================
+   BOOT
+===================================================================== */
+loadRecentCourses();
+render();
+</script>
+</body>
+</html>

@@ -1,1 +1,9 @@
-
+{
+  "name": "wolf-golf",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wolf Golf - live multiplayer betting scorecard",
+  "engines": {
+    "node": "24.x"
+  }
+}
