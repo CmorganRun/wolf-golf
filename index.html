@@ -133,6 +133,7 @@ a{color:var(--gold);}
 .decision-btn.solo{border-color:var(--red); color:#f3a08f;}
 .decision-btn.partner{border-color:var(--blue); color:#a9cbe4;}
 .decision-btn:active{transform:scale(0.98);}
+.stroke-badge{color:var(--gold); font-size:8px; letter-spacing:1px; vertical-align:middle; margin:0 2px;}
 
 .matchup-banner{
   border-radius:12px; padding:14px; margin-bottom:14px; text-align:center;
@@ -308,6 +309,14 @@ function strokesForHole(handicap, si) {
   const base = Math.floor(h / 18);
   const remainder = h - base * 18;
   return base + (si <= remainder ? 1 : 0);
+}
+
+// Small gold-dot badge used anywhere we show a player's name (tee order,
+// partner-pick buttons) to flag that they get a stroke on the current hole.
+function strokeBadge(strokes) {
+  if (!strokes) return '';
+  const dots = '●'.repeat(Math.min(strokes, 3));
+  return `<span class="stroke-badge" title="${strokes} stroke${strokes > 1 ? 's' : ''} on this hole">${dots}</span>`;
 }
 
 function netScoreColor(score, par) {
@@ -807,7 +816,7 @@ function renderHoleTab() {
     <div class="tee-order">
       ${teeOrder.map((pIdx, pos) => `
         <div class="tee-chip ${pIdx === wolfIdx ? 'wolf' : ''}">
-          <span class="num">${pos + 1}</span> ${escapeHtml(players[pIdx].name)} ${pIdx === wolfIdx ? '🐺' : ''}
+          <span class="num">${pos + 1}</span> ${escapeHtml(players[pIdx].name)} ${strokeBadge(strokesForHole(players[pIdx].handicap, holeInfo.si))} ${pIdx === wolfIdx ? '🐺' : ''}
         </div>
       `).join('')}
     </div>
@@ -816,19 +825,23 @@ function renderHoleTab() {
   let decisionHtml;
   if (!hs.locked) {
     const nonWolf = [0, 1, 2, 3].filter(i => i !== wolfIdx);
+    const wolfStrokes = strokesForHole(players[wolfIdx].handicap, holeInfo.si);
     decisionHtml = `
       <div class="card">
-        <h3>${escapeHtml(players[wolfIdx].name)} is the Wolf 🐺</h3>
-        <div class="muted mt8" style="margin-bottom:12px;">Blind Wolf must be called before any tee shot. Otherwise, pick a partner after seeing shots, or go solo.</div>
+        <h3>${escapeHtml(players[wolfIdx].name)} is the Wolf 🐺 ${strokeBadge(wolfStrokes)}</h3>
+        <div class="muted mt8" style="margin-bottom:12px;">Blind Wolf must be called before any tee shot. Otherwise, pick a partner after seeing shots, or go solo. Gold dots show who gets a stroke on this hole (Par ${holeInfo.par}, SI ${holeInfo.si ?? '-'}).</div>
         <div class="decision-grid">
           <button class="decision-btn blind" data-action="decide-blind">
             Blind Wolf <span class="tag">before any tee shot · 2× stakes</span>
           </button>
-          ${nonWolf.map(i => `
+          ${nonWolf.map(i => {
+            const strokes = strokesForHole(players[i].handicap, holeInfo.si);
+            return `
             <button class="decision-btn partner" data-action="decide-partner" data-idx="${i}">
-              Partner with ${escapeHtml(players[i].name)} <span class="tag">2 vs 2</span>
-            </button>
-          `).join('')}
+              <span>Partner with ${escapeHtml(players[i].name)} ${strokeBadge(strokes)}</span>
+              <span class="tag">2 vs 2${strokes ? ' · gets ' + strokes + (strokes > 1 ? ' strokes' : ' stroke') : ''}</span>
+            </button>`;
+          }).join('')}
           <button class="decision-btn solo" data-action="decide-solo">
             Go Solo <span class="tag">Wolf vs all 3 · 2× stakes</span>
           </button>
